@@ -1,0 +1,8 @@
+{
+  "name": "RootCause",
+  "description": "Hands-on IT engineering platform featuring real-life support tickets, browser-based virtual labs, weekly security awareness briefings, a career roadmap, and a diagnostic knowledge base.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
