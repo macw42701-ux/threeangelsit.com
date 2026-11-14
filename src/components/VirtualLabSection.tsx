@@ -248,7 +248,6 @@ export default function VirtualLabSection() {
     ]);
   };
 
-  // Helper for SVG packet node highlighting
   const getNodeState = (nodeId: string): 'nominal' | 'blocked' | 'idle' => {
     if (traceStep < 0) return 'idle';
     if (activeNetScenario.failingHopId === nodeId) return 'blocked';
@@ -269,23 +268,26 @@ export default function VirtualLabSection() {
   };
 
   return (
-    <section id="lab" className="border-b border-slate-200 bg-white py-14 lg:py-20">
+    <section id="lab" className="border-b border-slate-800/80 bg-[#0E182A] py-16 lg:py-20">
       <div className="mx-auto max-w-7xl px-6">
         {/* Header & Mode Switcher */}
-        <div className="flex flex-col justify-between gap-6 border-b border-slate-200 pb-6 lg:flex-row lg:items-end">
+        <div className="flex flex-col justify-between gap-6 border-b border-slate-800 pb-6 lg:flex-row lg:items-end">
           <div className="max-w-2xl">
-            <h2 className="font-display text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-              02. Virtual IT Lab
+            <p className="font-mono text-xs font-semibold text-[#06B6D4]">
+              07. Interactive Practice & Simulations
+            </p>
+            <h2 className="mt-1 font-display text-2xl font-bold tracking-tight text-[#F8FAFC] sm:text-3xl">
+              Virtual IT Lab
             </h2>
-            <p className="mt-2 text-base text-slate-600">
-              Practice troubleshooting directly in the browser before touching production servers. Trace failing network hops, repair Windows subsystems, and run real Linux commands.
+            <p className="mt-2 text-base text-[#CBD5E1]">
+              Practice troubleshooting directly in the browser before touching production infrastructure. Trace failing network hops, repair Windows services, and execute Linux commands.
             </p>
           </div>
 
           <div
             role="tablist"
             aria-label="Virtual lab mode"
-            className="flex flex-wrap items-center gap-1 rounded-lg bg-slate-100 p-1"
+            className="flex flex-wrap items-center gap-1 rounded-lg border border-slate-700/70 bg-[#0B1220] p-1"
           >
             <button
               type="button"
@@ -294,8 +296,8 @@ export default function VirtualLabSection() {
               onClick={() => setLabMode('network')}
               className={`inline-flex items-center gap-2 rounded-md px-3.5 py-2 text-xs font-semibold whitespace-nowrap shrink-0 transition-colors duration-150 cursor-pointer ${
                 labMode === 'network'
-                  ? 'bg-white text-slate-900 shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-[#2563EB] text-white shadow-sm'
+                  : 'text-[#CBD5E1] hover:text-white'
               }`}
             >
               <Network className="h-3.5 w-3.5" />
@@ -309,8 +311,8 @@ export default function VirtualLabSection() {
               onClick={() => setLabMode('windows')}
               className={`inline-flex items-center gap-2 rounded-md px-3.5 py-2 text-xs font-semibold whitespace-nowrap shrink-0 transition-colors duration-150 cursor-pointer ${
                 labMode === 'windows'
-                  ? 'bg-white text-slate-900 shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-[#2563EB] text-white shadow-sm'
+                  : 'text-[#CBD5E1] hover:text-white'
               }`}
             >
               <Monitor className="h-3.5 w-3.5" />
@@ -324,8 +326,8 @@ export default function VirtualLabSection() {
               onClick={() => setLabMode('linux')}
               className={`inline-flex items-center gap-2 rounded-md px-3.5 py-2 text-xs font-semibold whitespace-nowrap shrink-0 transition-colors duration-150 cursor-pointer ${
                 labMode === 'linux'
-                  ? 'bg-white text-slate-900 shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-[#2563EB] text-white shadow-sm'
+                  : 'text-[#CBD5E1] hover:text-white'
               }`}
             >
               <Terminal className="h-3.5 w-3.5" />
@@ -352,8 +354,8 @@ export default function VirtualLabSection() {
                       }}
                       className={`rounded-lg border px-3 py-1.5 text-xs font-medium whitespace-nowrap shrink-0 transition-colors cursor-pointer ${
                         scenarioId === sc.id
-                          ? 'border-blue-700 bg-blue-700 text-white'
-                          : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'
+                          ? 'border-cyan-400 bg-[#2563EB] text-white'
+                          : 'border-slate-700 bg-[#14243A] text-[#CBD5E1] hover:border-slate-500 hover:text-white'
                       }`}
                     >
                       {sc.label}
@@ -364,7 +366,7 @@ export default function VirtualLabSection() {
                 <button
                   type="button"
                   onClick={handleRunTrace}
-                  className="inline-flex min-h-[40px] items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-xs font-semibold text-white whitespace-nowrap shrink-0 hover:bg-slate-800 cursor-pointer"
+                  className="inline-flex min-h-[40px] items-center gap-2 rounded-lg bg-[#F59E0B] px-4 py-2 text-xs font-semibold text-[#0B1220] whitespace-nowrap shrink-0 hover:bg-amber-400 cursor-pointer"
                 >
                   <Play className="h-3.5 w-3.5" />
                   Run Packet Trace
@@ -372,7 +374,7 @@ export default function VirtualLabSection() {
               </div>
 
               {/* SVG Network Diagram */}
-              <div className="overflow-x-auto rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <div className="overflow-x-auto rounded-2xl border border-slate-700/70 bg-[#0B1220] p-4">
                 <svg
                   viewBox="0 0 820 350"
                   className="h-auto w-full min-w-[640px]"
@@ -380,34 +382,34 @@ export default function VirtualLabSection() {
                   aria-label="Simulated corporate network topology diagram"
                 >
                   {/* Links */}
-                  <line x1="135" y1="170" x2="270" y2="170" stroke="#CBD5E1" strokeWidth="3" />
+                  <line x1="135" y1="170" x2="270" y2="170" stroke="#334155" strokeWidth="3" />
                   <line
                     x1="330"
                     y1="170"
                     x2="470"
                     y2="170"
-                    stroke={activeNetScenario.id === 'uplink-down' ? '#DC2626' : '#CBD5E1'}
+                    stroke={activeNetScenario.id === 'uplink-down' ? '#EF4444' : '#334155'}
                     strokeWidth="3"
                     strokeDasharray={activeNetScenario.id === 'uplink-down' ? '6 5' : undefined}
                   />
-                  <line x1="530" y1="170" x2="660" y2="75" stroke="#CBD5E1" strokeWidth="2.5" />
+                  <line x1="530" y1="170" x2="660" y2="75" stroke="#334155" strokeWidth="2.5" />
                   <line
                     x1="530"
                     y1="170"
                     x2="660"
                     y2="175"
-                    stroke={activeNetScenario.id === 'smb-acl-drop' ? '#DC2626' : '#CBD5E1'}
+                    stroke={activeNetScenario.id === 'smb-acl-drop' ? '#EF4444' : '#334155'}
                     strokeWidth="2.5"
                     strokeDasharray={activeNetScenario.id === 'smb-acl-drop' ? '6 5' : undefined}
                   />
-                  <line x1="530" y1="170" x2="660" y2="275" stroke="#CBD5E1" strokeWidth="2.5" />
+                  <line x1="530" y1="170" x2="660" y2="275" stroke="#334155" strokeWidth="2.5" />
 
                   {/* Animated active trace highlights */}
                   {traceStep >= 1 && (
-                    <line x1="135" y1="170" x2="270" y2="170" stroke="#2563EB" strokeWidth="4" />
+                    <line x1="135" y1="170" x2="270" y2="170" stroke="#06B6D4" strokeWidth="4" />
                   )}
                   {traceStep >= 2 && activeNetScenario.id !== 'uplink-down' && (
-                    <line x1="330" y1="170" x2="470" y2="170" stroke="#2563EB" strokeWidth="4" />
+                    <line x1="330" y1="170" x2="470" y2="170" stroke="#06B6D4" strokeWidth="4" />
                   )}
                   {traceStep >= 3 && activeNetScenario.id !== 'uplink-down' && (
                     <line
@@ -415,12 +417,12 @@ export default function VirtualLabSection() {
                       y1="170"
                       x2="660"
                       y2={activeNetScenario.targetType === 'internet' ? 275 : 75}
-                      stroke={activeNetScenario.id === 'dns-mismatch' ? '#DC2626' : '#2563EB'}
+                      stroke={activeNetScenario.id === 'dns-mismatch' ? '#EF4444' : '#06B6D4'}
                       strokeWidth="3.5"
                     />
                   )}
                   {traceStep >= 4 && activeNetScenario.id === 'healthy' && (
-                    <line x1="530" y1="170" x2="660" y2="175" stroke="#059669" strokeWidth="4" />
+                    <line x1="530" y1="170" x2="660" y2="175" stroke="#10B981" strokeWidth="4" />
                   )}
 
                   {/* Interactive Nodes */}
@@ -429,18 +431,18 @@ export default function VirtualLabSection() {
                     const isSelected = selectedNode.id === node.id;
                     const strokeColor =
                       state === 'blocked'
-                        ? '#DC2626'
+                        ? '#EF4444'
                         : state === 'nominal'
-                        ? '#059669'
+                        ? '#10B981'
                         : isSelected
-                        ? '#1D4ED8'
-                        : '#94A3B8';
+                        ? '#06B6D4'
+                        : '#475569';
                     const fillColor =
                       state === 'blocked'
-                        ? '#FEF2F2'
+                        ? '#3B1118'
                         : state === 'nominal'
-                        ? '#ECFDF5'
-                        : '#FFFFFF';
+                        ? '#0D332B'
+                        : '#14243A';
 
                     return (
                       <g
@@ -450,9 +452,9 @@ export default function VirtualLabSection() {
                         className="cursor-pointer"
                       >
                         <rect
-                          x="-62"
+                          x="-64"
                           y="-32"
-                          width="124"
+                          width="128"
                           height="64"
                           rx="10"
                           fill={fillColor}
@@ -463,15 +465,15 @@ export default function VirtualLabSection() {
                           x="0"
                           y="-6"
                           textAnchor="middle"
-                          className="fill-slate-900 text-[12px] font-semibold"
+                          className="fill-[#F8FAFC] text-[12px] font-semibold"
                         >
                           {node.label}
                         </text>
                         <text
                           x="0"
-                          y="12"
+                          y="13"
                           textAnchor="middle"
-                          className="fill-slate-500 font-mono text-[10px]"
+                          className="fill-[#06B6D4] font-mono text-[10px]"
                         >
                           {node.ip}
                         </text>
@@ -480,18 +482,18 @@ export default function VirtualLabSection() {
                   })}
                 </svg>
 
-                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-slate-200 pt-3 text-xs text-slate-600">
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-slate-800 pt-3 text-xs text-[#CBD5E1]">
                   <span>Click any device node to inspect its IP, VLAN, and listening ports.</span>
-                  <span className="font-mono text-slate-700">{activeNetScenario.packetSummary}</span>
+                  <span className="font-mono text-cyan-300">{activeNetScenario.packetSummary}</span>
                 </div>
               </div>
 
               {/* Per-Hop Trace Readout */}
-              <div className="rounded-xl border border-slate-200 bg-white p-5">
-                <h3 className="font-display text-sm font-semibold text-slate-900">
+              <div className="glass-surface rounded-2xl p-5">
+                <h3 className="font-display text-sm font-semibold text-[#F8FAFC]">
                   Hop-by-Hop Packet Inspection
                 </h3>
-                <div className="mt-3 divide-y divide-slate-100">
+                <div className="mt-3 divide-y divide-slate-800">
                   {activeNetScenario.hopDetails.map((hop, idx) => {
                     const visible = traceStep < 0 || traceStep >= idx;
                     return (
@@ -502,18 +504,18 @@ export default function VirtualLabSection() {
                         }`}
                       >
                         <div>
-                          <div className="text-xs font-semibold text-slate-900">{hop.hop}</div>
-                          <div className="text-xs text-slate-600">{hop.note}</div>
+                          <div className="text-xs font-semibold text-[#F8FAFC]">{hop.hop}</div>
+                          <div className="text-xs text-[#CBD5E1]">{hop.note}</div>
                         </div>
                         <div className="flex items-center gap-4 shrink-0 font-mono text-xs tabular-nums">
-                          <span className="text-slate-500">{hop.latency}</span>
+                          <span className="text-slate-400">{hop.latency}</span>
                           <span
                             className={`inline-flex items-center gap-1 font-semibold ${
                               hop.status === 'Nominal'
-                                ? 'text-emerald-700'
+                                ? 'text-emerald-400'
                                 : hop.status === 'Blocked'
-                                ? 'text-red-700'
-                                : 'text-amber-700'
+                                ? 'text-red-400'
+                                : 'text-[#F59E0B]'
                             }`}
                           >
                             {hop.status === 'Nominal' ? (
@@ -533,42 +535,44 @@ export default function VirtualLabSection() {
 
             {/* Node Inspector & Scenario Summary */}
             <div className="space-y-6 lg:col-span-4">
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-6">
-                <p className="text-xs font-medium text-slate-500">Selected Network Node</p>
-                <h3 className="mt-1 font-display text-xl font-bold text-slate-900">
+              <div className="glass-surface rounded-2xl p-6">
+                <p className="text-xs font-medium text-[#06B6D4]">Selected Network Node</p>
+                <h3 className="mt-1 font-display text-xl font-bold text-[#F8FAFC]">
                   {selectedNode.label}
                 </h3>
-                <p className="text-xs text-slate-600">{selectedNode.role}</p>
+                <p className="text-xs text-[#CBD5E1]">{selectedNode.role}</p>
 
-                <dl className="mt-5 space-y-3 border-t border-slate-200 pt-4 text-xs">
+                <dl className="mt-5 space-y-3 border-t border-slate-700/60 pt-4 text-xs">
                   <div className="flex justify-between gap-4">
-                    <dt className="text-slate-500">IP Address</dt>
-                    <dd className="font-mono font-semibold text-slate-900 tabular-nums">{selectedNode.ip}</dd>
+                    <dt className="text-slate-400">IP Address</dt>
+                    <dd className="font-mono font-semibold text-[#F8FAFC] tabular-nums">
+                      {selectedNode.ip}
+                    </dd>
                   </div>
                   <div className="flex justify-between gap-4">
-                    <dt className="text-slate-500">Subnet Mask</dt>
-                    <dd className="font-mono text-slate-800 tabular-nums">{selectedNode.subnet}</dd>
+                    <dt className="text-slate-400">Subnet Mask</dt>
+                    <dd className="font-mono text-[#CBD5E1] tabular-nums">{selectedNode.subnet}</dd>
                   </div>
                   <div className="flex justify-between gap-4">
-                    <dt className="text-slate-500">VLAN Scope</dt>
-                    <dd className="font-mono text-slate-800">{selectedNode.vlan}</dd>
+                    <dt className="text-slate-400">VLAN Scope</dt>
+                    <dd className="font-mono text-[#CBD5E1]">{selectedNode.vlan}</dd>
                   </div>
                   <div className="flex justify-between gap-4">
-                    <dt className="text-slate-500">Interfaces / Ports</dt>
-                    <dd className="text-right font-mono text-slate-800">{selectedNode.ports}</dd>
+                    <dt className="text-slate-400">Interfaces / Ports</dt>
+                    <dd className="text-right font-mono text-cyan-300">{selectedNode.ports}</dd>
                   </div>
                 </dl>
               </div>
 
-              <div className="rounded-xl border border-slate-200 bg-white p-6">
-                <h4 className="font-display text-base font-semibold text-slate-900">
+              <div className="glass-surface rounded-2xl p-6">
+                <h4 className="font-display text-base font-semibold text-[#F8FAFC]">
                   Active Condition: {activeNetScenario.label}
                 </h4>
-                <p className="mt-2 text-xs leading-relaxed text-slate-600">
+                <p className="mt-2 text-xs leading-relaxed text-[#CBD5E1]">
                   {activeNetScenario.description}
                 </p>
-                <div className="mt-4 border-t border-slate-200 pt-4 text-xs leading-relaxed text-slate-700">
-                  <strong className="text-slate-900">Remediation: </strong>
+                <div className="mt-4 border-t border-slate-700/60 pt-4 text-xs leading-relaxed text-[#CBD5E1]">
+                  <strong className="text-[#F59E0B]">Remediation: </strong>
                   {activeNetScenario.remediationHint}
                 </div>
               </div>
@@ -580,7 +584,7 @@ export default function VirtualLabSection() {
         {labMode === 'windows' && (
           <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12">
             <div className="space-y-6 lg:col-span-5">
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 {WINDOWS_SCENARIOS.map((sc) => {
                   const active = sc.id === activeWinScenario.id;
                   const fixed = winResolved[sc.id] ?? false;
@@ -591,17 +595,17 @@ export default function VirtualLabSection() {
                       onClick={() => setWinScenarioId(sc.id)}
                       className={`w-full rounded-xl border p-4 text-left transition-colors cursor-pointer ${
                         active
-                          ? 'border-blue-600 bg-blue-50/40'
-                          : 'border-slate-200 bg-white hover:border-slate-300'
+                          ? 'border-cyan-400/70 bg-[#14243A]'
+                          : 'border-slate-800 bg-[#0B1220] hover:border-slate-600'
                       }`}
                     >
                       <div className="flex items-center justify-between gap-2">
-                        <span className="font-display text-sm font-semibold text-slate-900">
+                        <span className="font-display text-sm font-semibold text-[#F8FAFC]">
                           {sc.title}
                         </span>
                         <span
                           className={`inline-flex items-center gap-1 text-xs font-semibold shrink-0 ${
-                            fixed ? 'text-emerald-700' : 'text-amber-700'
+                            fixed ? 'text-emerald-400' : 'text-[#F59E0B]'
                           }`}
                         >
                           {fixed ? (
@@ -617,17 +621,17 @@ export default function VirtualLabSection() {
                           )}
                         </span>
                       </div>
-                      <p className="mt-1.5 text-xs leading-relaxed text-slate-600">{sc.symptom}</p>
+                      <p className="mt-1.5 text-xs leading-relaxed text-[#CBD5E1]">{sc.symptom}</p>
                     </button>
                   );
                 })}
               </div>
 
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-5">
-                <h4 className="font-display text-sm font-semibold text-slate-900">
+              <div className="glass-surface rounded-2xl p-5">
+                <h4 className="font-display text-sm font-semibold text-[#F8FAFC]">
                   Suggested Windows Commands
                 </h4>
-                <p className="mt-1 text-xs text-slate-600">
+                <p className="mt-1 text-xs text-[#CBD5E1]">
                   Click any command to run it in the Windows administrative console, or type directly.
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
@@ -636,7 +640,7 @@ export default function VirtualLabSection() {
                       key={cmd}
                       type="button"
                       onClick={() => executeWindowsCommand(cmd)}
-                      className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-mono text-xs text-slate-800 hover:border-blue-400 hover:bg-blue-50/40 cursor-pointer"
+                      className="rounded-lg border border-slate-700 bg-[#0B1220] px-3 py-1.5 font-mono text-xs text-cyan-300 hover:border-cyan-400 cursor-pointer"
                     >
                       {cmd}
                     </button>
@@ -646,14 +650,14 @@ export default function VirtualLabSection() {
             </div>
 
             <div className="space-y-4 lg:col-span-7">
-              <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 px-5 py-3.5">
+              <div className="glass-surface flex flex-wrap items-center justify-between gap-3 rounded-xl px-5 py-3.5">
                 <div className="text-xs">
-                  <span className="text-slate-500">Subsystem: </span>
-                  <strong className="text-slate-900">{activeWinScenario.serviceName}</strong>
+                  <span className="text-slate-400">Subsystem: </span>
+                  <strong className="text-[#F8FAFC]">{activeWinScenario.serviceName}</strong>
                 </div>
                 <div
                   className={`inline-flex items-center gap-1.5 text-xs font-semibold ${
-                    isWinFixed ? 'text-emerald-700' : 'text-red-700'
+                    isWinFixed ? 'text-emerald-400' : 'text-red-400'
                   }`}
                 >
                   {isWinFixed ? (
@@ -665,7 +669,7 @@ export default function VirtualLabSection() {
                 </div>
               </div>
 
-              <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-950 text-slate-100">
+              <div className="overflow-hidden rounded-2xl border border-slate-700 bg-[#070D18] text-slate-100">
                 <div className="flex items-center justify-between border-b border-slate-800 px-4 py-2.5 text-xs text-slate-400">
                   <span className="font-mono">Administrator: Windows PowerShell / CMD</span>
                   <button
@@ -689,12 +693,12 @@ export default function VirtualLabSection() {
                     <div className="text-slate-400">
                       Microsoft Windows [Version 10.0.22631] — Interactive Troubleshooting Lab.
                       <br />
-                      Type <span className="text-slate-200">help</span> or run a diagnostic command below.
+                      Type <span className="text-cyan-300">help</span> or run a diagnostic command below.
                     </div>
                   ) : (
                     currentWinLogs.map((entry, idx) => (
                       <div key={idx} className="space-y-1">
-                        <div className="text-blue-400">
+                        <div className="text-cyan-300">
                           <span className="text-slate-500">C:\Windows\System32&gt; </span>
                           {entry.cmd}
                         </div>
@@ -706,7 +710,7 @@ export default function VirtualLabSection() {
 
                 <form
                   onSubmit={handleWinSubmit}
-                  className="flex items-center gap-2 border-t border-slate-800 bg-slate-900 px-4 py-2.5"
+                  className="flex items-center gap-2 border-t border-slate-800 bg-[#0B1220] px-4 py-2.5"
                 >
                   <span className="font-mono text-xs text-slate-400 shrink-0">C:\&gt;</span>
                   <input
@@ -722,7 +726,7 @@ export default function VirtualLabSection() {
                   />
                   <button
                     type="submit"
-                    className="rounded bg-blue-700 px-3 py-1.5 text-xs font-semibold text-white whitespace-nowrap shrink-0 hover:bg-blue-600 cursor-pointer"
+                    className="rounded bg-[#2563EB] px-3 py-1.5 text-xs font-semibold text-white whitespace-nowrap shrink-0 hover:bg-blue-500 cursor-pointer"
                   >
                     Run
                   </button>
@@ -730,7 +734,7 @@ export default function VirtualLabSection() {
               </div>
 
               {isWinFixed && (
-                <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-xs leading-relaxed text-emerald-900">
+                <div className="rounded-xl border border-emerald-500/40 bg-emerald-950/40 p-4 text-xs leading-relaxed text-emerald-200">
                   <strong className="font-semibold">Scenario Resolved: </strong>
                   {activeWinScenario.explanation}
                 </div>
@@ -745,10 +749,10 @@ export default function VirtualLabSection() {
             {/* Guided Tasks */}
             <div className="space-y-4 lg:col-span-5">
               <div className="flex items-center justify-between">
-                <h3 className="font-display text-base font-semibold text-slate-900">
+                <h3 className="font-display text-base font-semibold text-[#F8FAFC]">
                   Guided Linux Exercises
                 </h3>
-                <span className="font-mono text-xs text-slate-600 tabular-nums">
+                <span className="font-mono text-xs text-[#06B6D4] tabular-nums">
                   {completedLinuxTasks.length} / {LINUX_TASKS.length} Completed
                 </span>
               </div>
@@ -760,29 +764,31 @@ export default function VirtualLabSection() {
                     <div
                       key={task.id}
                       className={`rounded-xl border p-4 ${
-                        done ? 'border-emerald-200 bg-emerald-50/50' : 'border-slate-200 bg-slate-50'
+                        done
+                          ? 'border-emerald-500/50 bg-emerald-950/30'
+                          : 'border-slate-700/70 bg-[#0B1220]'
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2">
-                        <h4 className="font-display text-sm font-semibold text-slate-900">
+                        <h4 className="font-display text-sm font-semibold text-[#F8FAFC]">
                           {task.title}
                         </h4>
                         <span
                           className={`inline-flex items-center gap-1 text-xs font-semibold shrink-0 ${
-                            done ? 'text-emerald-700' : 'text-slate-500'
+                            done ? 'text-emerald-400' : 'text-[#F59E0B]'
                           }`}
                         >
                           {done && <CheckCircle2 className="h-3.5 w-3.5" />}
                           {done ? 'Passed' : 'Pending'}
                         </span>
                       </div>
-                      <p className="mt-1.5 text-xs leading-relaxed text-slate-600">
+                      <p className="mt-1.5 text-xs leading-relaxed text-[#CBD5E1]">
                         {task.instruction}
                       </p>
                       <button
                         type="button"
                         onClick={() => executeLinuxCommand(task.hintCommand)}
-                        className="mt-3 inline-flex items-center gap-1.5 rounded-md border border-slate-300 bg-white px-2.5 py-1 font-mono text-[11px] text-slate-700 hover:border-blue-400 hover:text-blue-800 cursor-pointer"
+                        className="mt-3 inline-flex items-center gap-1.5 rounded-md border border-slate-700 bg-[#14243A] px-2.5 py-1 font-mono text-[11px] text-cyan-300 hover:border-cyan-400 cursor-pointer"
                       >
                         Try: {task.hintCommand}
                       </button>
@@ -791,17 +797,22 @@ export default function VirtualLabSection() {
                 })}
               </div>
 
-              <div className="rounded-xl border border-slate-200 bg-white p-4 text-xs text-slate-600">
-                <strong className="text-slate-900">Tip:</strong> Task 3 requires both{' '}
-                <code className="rounded bg-slate-100 px-1 py-0.5 text-slate-900">chmod +x /opt/backup/run.sh</code>{' '}
+              <div className="glass-surface rounded-xl p-4 text-xs text-[#CBD5E1]">
+                <strong className="text-[#F8FAFC]">Tip:</strong> Task 3 requires both{' '}
+                <code className="rounded bg-[#0B1220] px-1.5 py-0.5 text-cyan-300">
+                  chmod +x /opt/backup/run.sh
+                </code>{' '}
                 and{' '}
-                <code className="rounded bg-slate-100 px-1 py-0.5 text-slate-900">systemctl restart nginx</code>.
+                <code className="rounded bg-[#0B1220] px-1.5 py-0.5 text-cyan-300">
+                  systemctl restart nginx
+                </code>
+                .
               </div>
             </div>
 
             {/* Interactive Bash Terminal */}
             <div className="lg:col-span-7">
-              <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-950 text-slate-100">
+              <div className="overflow-hidden rounded-2xl border border-slate-700 bg-[#070D18] text-slate-100">
                 <div className="flex items-center justify-between border-b border-slate-800 px-4 py-2.5 text-xs text-slate-400">
                   <span className="font-mono">sysadmin@lab-srv01: ~ (Ubuntu 24.04 Sandbox)</span>
                   <button
@@ -829,7 +840,7 @@ export default function VirtualLabSection() {
 
                 <form
                   onSubmit={handleLinuxSubmit}
-                  className="flex items-center gap-2 border-t border-slate-800 bg-slate-900 px-4 py-2.5"
+                  className="flex items-center gap-2 border-t border-slate-800 bg-[#0B1220] px-4 py-2.5"
                 >
                   <span className="font-mono text-xs text-emerald-400 shrink-0">~$</span>
                   <input
@@ -845,7 +856,7 @@ export default function VirtualLabSection() {
                   />
                   <button
                     type="submit"
-                    className="rounded bg-blue-700 px-3 py-1.5 text-xs font-semibold text-white whitespace-nowrap shrink-0 hover:bg-blue-600 cursor-pointer"
+                    className="rounded bg-[#2563EB] px-3 py-1.5 text-xs font-semibold text-white whitespace-nowrap shrink-0 hover:bg-blue-500 cursor-pointer"
                   >
                     Execute
                   </button>
@@ -854,18 +865,22 @@ export default function VirtualLabSection() {
 
               {/* Quick command bar */}
               <div className="mt-3 flex flex-wrap items-center gap-2">
-                {['ls -la /opt/backup', 'systemctl status nginx', 'systemctl restart nginx', 'df -h', 'help'].map(
-                  (quick) => (
-                    <button
-                      key={quick}
-                      type="button"
-                      onClick={() => executeLinuxCommand(quick)}
-                      className="rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 font-mono text-[11px] text-slate-700 hover:border-slate-300 hover:bg-slate-100 cursor-pointer"
-                    >
-                      {quick}
-                    </button>
-                  )
-                )}
+                {[
+                  'ls -la /opt/backup',
+                  'systemctl status nginx',
+                  'systemctl restart nginx',
+                  'df -h',
+                  'help',
+                ].map((quick) => (
+                  <button
+                    key={quick}
+                    type="button"
+                    onClick={() => executeLinuxCommand(quick)}
+                    className="rounded-md border border-slate-700 bg-[#14243A] px-2.5 py-1 font-mono text-[11px] text-cyan-300 hover:border-cyan-400 cursor-pointer"
+                  >
+                    {quick}
+                  </button>
+                ))}
               </div>
             </div>
           </div>

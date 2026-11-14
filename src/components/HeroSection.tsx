@@ -1,6 +1,5 @@
-import { ArrowRight, Terminal } from 'lucide-react';
-import { useState } from 'react';
-import heroWorkbenchImg from '../assets/images/hero_it_workbench_1794586743951.jpg';
+import { ArrowRight, BookOpen, Compass, Cpu, ShieldCheck, Terminal } from 'lucide-react';
+import { HeroTechScene } from './TechIllustrations';
 
 interface HeroSectionProps {
   solvedTicketsCount: number;
@@ -10,36 +9,41 @@ interface HeroSectionProps {
   onNavigate: (sectionId: string) => void;
 }
 
-const PILLARS = [
+const INTERACTIVE_MODULES = [
   {
     id: 'tickets',
     index: '01.',
-    title: 'Real-Life Ticket',
+    title: 'Real-Life Tickets',
     detail: 'Diagnose live incidents & compare solutions',
+    icon: Terminal,
   },
   {
     id: 'lab',
     index: '02.',
     title: 'Virtual IT Lab',
     detail: 'Network traces, Windows & Linux sandboxes',
+    icon: Cpu,
   },
   {
     id: 'awareness',
     index: '03.',
-    title: 'Weekly Awareness',
-    detail: 'Interactive phishing & data safety drills',
+    title: 'IT Awareness',
+    detail: 'Weekly phishing & security drills',
+    icon: ShieldCheck,
   },
   {
     id: 'roadmap',
     index: '04.',
     title: 'Engineer Roadmap',
-    detail: 'Step-by-step path from basics to security',
+    detail: 'Structured path from basics to security',
+    icon: Compass,
   },
   {
     id: 'kb',
     index: '05.',
     title: 'Knowledge Base',
-    detail: 'Searchable runbooks & diagnostic commands',
+    detail: 'Searchable runbooks & CLI commands',
+    icon: BookOpen,
   },
 ];
 
@@ -50,116 +54,117 @@ export default function HeroSection({
   totalMilestonesCount,
   onNavigate,
 }: HeroSectionProps) {
-  const [imgError, setImgError] = useState(false);
-
   return (
-    <section id="top" className="border-b border-slate-200 bg-white">
-      <div className="mx-auto max-w-7xl px-6 py-12 lg:py-16">
+    <section
+      id="top"
+      className="relative overflow-hidden border-b border-slate-800/80 bg-[#0B1220] tech-grid-bg"
+    >
+      {/* Subtle ambient background highlights */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-28 left-1/4 h-96 w-96 rounded-full bg-[#2563EB]/15 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-16 right-1/6 h-80 w-80 rounded-full bg-[#06B6D4]/10 blur-3xl"
+      />
+
+      <div className="relative mx-auto max-w-7xl px-6 py-14 lg:py-20">
         <div className="grid grid-cols-1 items-stretch gap-10 lg:grid-cols-12">
-          {/* Left editorial column */}
+          {/* Left Hero Copy */}
           <div className="flex flex-col justify-between lg:col-span-6">
             <div>
-              <p className="text-xs font-medium tracking-wide text-slate-500">
-                Hands-On IT Operations & Infrastructure Practice
+              <p className="text-xs font-semibold tracking-wide text-[#06B6D4]">
+                THREE ANGELS IT SERVICES · Technology Education & Diagnostics Platform
               </p>
 
               <h1
-                className="mt-4 font-display text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-[3.25rem] lg:leading-[1.1]"
+                className="mt-4 font-display text-4xl font-bold tracking-tight text-[#F8FAFC] sm:text-5xl lg:text-[3.35rem] lg:leading-[1.08]"
                 style={{ textWrap: 'balance' }}
               >
-                Learn IT engineering by solving real incidents, not reading summaries.
+                Learn Technology. Build Skills. Solve Real Problems.
               </h1>
 
-              <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-600">
-                Inspect live support tickets, trace failing packets across simulated networks, run commands in browser-based Windows and Linux terminals, and track your career progression from helpdesk fundamentals to security operations.
+              <p className="mt-5 max-w-xl text-base leading-relaxed text-[#CBD5E1] sm:text-lg">
+                Discover practical IT knowledge, digital awareness, beginner-friendly courses and technical solutions designed to help you grow in the digital world.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <button
                   type="button"
-                  onClick={() => onNavigate('tickets')}
-                  className="inline-flex min-h-[44px] items-center gap-2 rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-semibold text-white whitespace-nowrap shrink-0 transition-colors duration-150 hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 cursor-pointer"
+                  onClick={() => onNavigate('courses')}
+                  className="inline-flex min-h-[46px] items-center gap-2 rounded-lg bg-[#2563EB] px-6 py-3 text-sm font-semibold text-white whitespace-nowrap shrink-0 shadow-lg shadow-blue-950/50 transition-all duration-150 hover:-translate-y-0.5 hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400 cursor-pointer"
                 >
-                  Open Active Ticket
+                  Explore Free Courses
                   <ArrowRight className="h-4 w-4" />
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => onNavigate('lab')}
-                  className="inline-flex min-h-[44px] items-center gap-2 rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 whitespace-nowrap shrink-0 transition-colors duration-150 hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 cursor-pointer"
+                  onClick={() => onNavigate('solutions')}
+                  className="inline-flex min-h-[46px] items-center gap-2 rounded-lg border border-cyan-500/40 bg-[#14243A]/80 px-6 py-3 text-sm font-semibold text-[#F8FAFC] whitespace-nowrap shrink-0 transition-all duration-150 hover:-translate-y-0.5 hover:border-cyan-400 hover:bg-[#14243A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400 cursor-pointer"
                 >
-                  <Terminal className="h-4 w-4 text-slate-600" />
-                  Launch Virtual Lab
+                  Discover IT Solutions
                 </button>
               </div>
             </div>
 
-            {/* Quiet unboxed progress metadata */}
-            <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-slate-200 pt-5 text-xs text-slate-500 tabular-nums">
+            {/* Unboxed local progress metadata */}
+            <div className="mt-10 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-slate-800 pt-5 text-xs text-[#CBD5E1] tabular-nums">
               <span>
-                Tickets Verified: <strong className="font-semibold text-slate-900">{solvedTicketsCount} / {totalTicketsCount}</strong>
+                Tickets Solved:{' '}
+                <strong className="font-semibold text-[#F59E0B]">
+                  {solvedTicketsCount} / {totalTicketsCount}
+                </strong>
               </span>
-              <span aria-hidden="true">·</span>
+              <span aria-hidden="true" className="text-slate-600">
+                ·
+              </span>
               <span>
-                Roadmap Milestones: <strong className="font-semibold text-slate-900">{completedMilestonesCount} / {totalMilestonesCount}</strong>
+                Roadmap Milestones:{' '}
+                <strong className="font-semibold text-[#06B6D4]">
+                  {completedMilestonesCount} / {totalMilestonesCount}
+                </strong>
               </span>
-              <span aria-hidden="true">·</span>
-              <span>Browser-native sandboxes, zero setup</span>
+              <span aria-hidden="true" className="text-slate-600">
+                ·
+              </span>
+              <span>Free, open single-page access — no login required</span>
             </div>
           </div>
 
-          {/* Right visual frame */}
+          {/* Right 3D Isometric Technology Illustration */}
           <div className="lg:col-span-6">
-            <div className="relative h-full min-h-[280px] overflow-hidden rounded-xl border border-slate-200 bg-slate-900">
-              {!imgError ? (
-                <img
-                  src={heroWorkbenchImg}
-                  alt="IT engineer workstation displaying terminal diagnostics beside a patched network switch"
-                  referrerPolicy="no-referrer"
-                  onError={() => setImgError(true)}
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <div className="flex h-full min-h-[300px] flex-col items-center justify-center bg-slate-900 p-8 text-center text-slate-300">
-                  <Terminal className="h-10 w-10 text-blue-400" />
-                  <p className="mt-3 font-display text-lg font-semibold text-white">
-                    Three Angels IT Services Diagnostic Workbench
-                  </p>
-                  <p className="mt-1 max-w-sm text-sm text-slate-400">
-                    Interactive ticket triage, network packet tracing, and CLI practice environments.
-                  </p>
-                </div>
-              )}
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/85 via-slate-950/35 to-transparent p-5">
-                <p className="text-xs font-medium text-slate-200">
-                  Featured Scenario · INC-2048: Internet reachable, corporate SMB share unreachable
-                </p>
-              </div>
-            </div>
+            <HeroTechScene />
           </div>
         </div>
 
-        {/* Full-width 5-pillar interactive strip */}
-        <div className="mt-10 grid grid-cols-1 gap-3 border-t border-slate-200 pt-8 sm:grid-cols-2 lg:grid-cols-5">
-          {PILLARS.map((pillar) => (
-            <button
-              key={pillar.id}
-              type="button"
-              onClick={() => onNavigate(pillar.id)}
-              className="group flex flex-col items-start rounded-lg border border-slate-200 bg-slate-50/70 p-4 text-left transition-colors duration-150 hover:border-blue-300 hover:bg-blue-50/40 focus-visible:outline-2 focus-visible:outline-blue-700 cursor-pointer"
-            >
-              <span className="font-mono text-xs font-medium text-blue-700 tabular-nums">
-                {pillar.index}
-              </span>
-              <span className="mt-1.5 font-display text-base font-semibold text-slate-900 group-hover:text-blue-800">
-                {pillar.title}
-              </span>
-              <span className="mt-1 text-xs leading-relaxed text-slate-600">
-                {pillar.detail}
-              </span>
-            </button>
-          ))}
+        {/* Full-width interactive jump bar */}
+        <div className="mt-12 grid grid-cols-1 gap-3.5 border-t border-slate-800/80 pt-8 sm:grid-cols-2 lg:grid-cols-5">
+          {INTERACTIVE_MODULES.map((mod) => {
+            const Icon = mod.icon;
+            return (
+              <button
+                key={mod.id}
+                type="button"
+                onClick={() => onNavigate(mod.id)}
+                className="group glass-surface flex flex-col items-start rounded-xl p-4 text-left transition-all duration-150 hover:-translate-y-0.5 hover:border-cyan-400/50 focus-visible:outline-2 focus-visible:outline-cyan-400 cursor-pointer"
+              >
+                <div className="flex w-full items-center justify-between">
+                  <span className="font-mono text-xs font-semibold text-[#F59E0B] tabular-nums">
+                    {mod.index}
+                  </span>
+                  <Icon className="h-4 w-4 text-[#06B6D4] transition-transform duration-150 group-hover:scale-110" />
+                </div>
+                <span className="mt-2 font-display text-base font-semibold text-[#F8FAFC] group-hover:text-cyan-300">
+                  {mod.title}
+                </span>
+                <span className="mt-1 text-xs leading-relaxed text-[#CBD5E1]">
+                  {mod.detail}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
     </section>

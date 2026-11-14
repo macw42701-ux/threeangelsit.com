@@ -55,13 +55,16 @@ export default function KnowledgeBaseSection() {
   };
 
   return (
-    <section id="kb" className="bg-slate-50 py-14 lg:py-20">
+    <section id="kb" className="border-b border-slate-800/80 bg-[#0B1220] py-16 lg:py-20">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="border-b border-slate-200 pb-6">
-          <h2 className="font-display text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-            05. IT Knowledge Base
+        <div className="border-b border-slate-800 pb-6">
+          <p className="font-mono text-xs font-semibold text-[#06B6D4]">
+            06. Technical Support & Diagnostic Runbooks
+          </p>
+          <h2 className="mt-1 font-display text-2xl font-bold tracking-tight text-[#F8FAFC] sm:text-3xl">
+            IT Knowledge Base
           </h2>
-          <p className="mt-2 max-w-2xl text-base text-slate-600">
+          <p className="mt-2 max-w-2xl text-base text-[#CBD5E1]">
             Searchable production runbooks structured by real-world symptoms, root causes, copyable diagnostic commands, remediation steps, and prevention controls.
           </p>
 
@@ -77,13 +80,13 @@ export default function KnowledgeBaseSection() {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search symptoms, commands, error codes (e.g. 0x80070035, ss, MTU)..."
                 aria-label="Search IT knowledge base"
-                className="min-h-[44px] w-full rounded-lg border border-slate-300 bg-white pr-4 pl-10 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
+                className="min-h-[44px] w-full rounded-lg border border-slate-700 bg-[#14243A] pr-4 pl-10 text-sm text-[#F8FAFC] placeholder:text-slate-400 focus:border-cyan-400 focus:outline-none"
               />
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
               {/* Category segmented filter */}
-              <div className="flex flex-wrap items-center gap-1 rounded-lg bg-slate-200/70 p-1">
+              <div className="flex flex-wrap items-center gap-1 rounded-lg border border-slate-700/70 bg-[#14243A]/70 p-1">
                 {CATEGORIES.map((cat) => (
                   <button
                     key={cat}
@@ -91,8 +94,8 @@ export default function KnowledgeBaseSection() {
                     onClick={() => setCategory(cat)}
                     className={`rounded-md px-2.5 py-1.5 text-xs font-medium whitespace-nowrap shrink-0 transition-colors cursor-pointer ${
                       category === cat
-                        ? 'bg-white text-slate-900 shadow-sm'
-                        : 'text-slate-600 hover:text-slate-900'
+                        ? 'bg-[#2563EB] text-white shadow-sm'
+                        : 'text-[#CBD5E1] hover:text-white'
                     }`}
                   >
                     {cat}
@@ -101,7 +104,7 @@ export default function KnowledgeBaseSection() {
               </div>
 
               {/* Difficulty segmented filter */}
-              <div className="flex items-center gap-1 rounded-lg bg-slate-200/70 p-1">
+              <div className="flex items-center gap-1 rounded-lg border border-slate-700/70 bg-[#14243A]/70 p-1">
                 {DIFFICULTIES.map((lvl) => (
                   <button
                     key={lvl}
@@ -109,8 +112,8 @@ export default function KnowledgeBaseSection() {
                     onClick={() => setDifficulty(lvl)}
                     className={`rounded-md px-2.5 py-1.5 text-xs font-medium whitespace-nowrap shrink-0 transition-colors cursor-pointer ${
                       difficulty === lvl
-                        ? 'bg-white text-slate-900 shadow-sm'
-                        : 'text-slate-600 hover:text-slate-900'
+                        ? 'bg-[#06B6D4] text-[#0B1220] font-semibold shadow-sm'
+                        : 'text-[#CBD5E1] hover:text-white'
                     }`}
                   >
                     {lvl}
@@ -123,11 +126,11 @@ export default function KnowledgeBaseSection() {
 
         {/* Results Split */}
         {filteredArticles.length === 0 ? (
-          <div className="mt-8 rounded-xl border border-slate-200 bg-white p-10 text-center">
-            <p className="font-display text-base font-semibold text-slate-900">
+          <div className="glass-surface mt-8 rounded-2xl p-10 text-center">
+            <p className="font-display text-base font-semibold text-[#F8FAFC]">
               No matching runbooks found
             </p>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-1 text-sm text-[#CBD5E1]">
               Try clearing your search filter or switching to All categories.
             </p>
             <button
@@ -137,7 +140,7 @@ export default function KnowledgeBaseSection() {
                 setCategory('All');
                 setDifficulty('All');
               }}
-              className="mt-4 rounded-lg border border-slate-300 bg-white px-4 py-2 text-xs font-semibold text-slate-800 hover:bg-slate-50 cursor-pointer"
+              className="mt-4 rounded-lg border border-slate-600 bg-[#14243A] px-4 py-2 text-xs font-semibold text-[#F8FAFC] hover:border-cyan-400 cursor-pointer"
             >
               Reset Filters
             </button>
@@ -146,7 +149,7 @@ export default function KnowledgeBaseSection() {
           <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12">
             {/* Runbook List */}
             <div className="space-y-2.5 lg:col-span-5">
-              <p className="text-xs font-medium text-slate-500 tabular-nums">
+              <p className="text-xs font-medium text-slate-400 tabular-nums">
                 Showing {filteredArticles.length} of {KNOWLEDGE_BASE.length} runbooks
               </p>
 
@@ -159,21 +162,21 @@ export default function KnowledgeBaseSection() {
                     onClick={() => setSelectedId(art.id)}
                     className={`w-full rounded-xl border p-4 text-left transition-colors cursor-pointer ${
                       isSelected
-                        ? 'border-blue-600 bg-white shadow-sm'
-                        : 'border-slate-200 bg-white/80 hover:border-slate-300 hover:bg-white'
+                        ? 'border-cyan-400/70 bg-[#14243A] shadow-md shadow-cyan-950/20'
+                        : 'border-slate-800 bg-[#0F1B2E] hover:border-slate-600 hover:bg-[#14243A]/70'
                     }`}
                   >
-                    <div className="flex items-center gap-2 text-xs text-slate-500">
-                      <span className="font-semibold text-blue-700">{art.category}</span>
+                    <div className="flex items-center gap-2 text-xs text-slate-400">
+                      <span className="font-semibold text-[#06B6D4]">{art.category}</span>
                       <span aria-hidden="true">·</span>
-                      <span>{art.difficulty}</span>
+                      <span className="text-[#F59E0B]">{art.difficulty}</span>
                       <span aria-hidden="true">·</span>
                       <span>Updated {art.updated}</span>
                     </div>
-                    <h3 className="mt-1.5 font-display text-sm font-semibold text-slate-900">
+                    <h3 className="mt-1.5 font-display text-sm font-semibold text-[#F8FAFC]">
                       {art.title}
                     </h3>
-                    <p className="mt-1 text-xs text-slate-600 line-clamp-2">
+                    <p className="mt-1 text-xs text-[#CBD5E1] line-clamp-2">
                       {art.symptoms[0]}
                     </p>
                   </button>
@@ -184,26 +187,29 @@ export default function KnowledgeBaseSection() {
             {/* Selected Runbook Detail */}
             {activeArticle && (
               <div className="lg:col-span-7">
-                <article className="rounded-xl border border-slate-200 bg-white p-6 sm:p-8">
-                  <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
-                    <span className="font-semibold text-blue-700">{activeArticle.category}</span>
+                <article className="glass-surface rounded-2xl p-6 sm:p-8">
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400">
+                    <span className="font-semibold text-[#06B6D4]">{activeArticle.category}</span>
                     <span aria-hidden="true">·</span>
-                    <span>Difficulty: {activeArticle.difficulty}</span>
+                    <span className="text-[#F59E0B]">Difficulty: {activeArticle.difficulty}</span>
                     <span aria-hidden="true">·</span>
                     <span>Updated {activeArticle.updated}</span>
                   </div>
 
-                  <h3 className="mt-2 font-display text-2xl font-bold text-slate-900" style={{ textWrap: 'balance' }}>
+                  <h3
+                    className="mt-2 font-display text-2xl font-bold text-[#F8FAFC]"
+                    style={{ textWrap: 'balance' }}
+                  >
                     {activeArticle.title}
                   </h3>
 
                   {/* Symptoms & Possible Causes */}
-                  <div className="mt-6 grid grid-cols-1 gap-6 border-t border-slate-200 pt-6 md:grid-cols-2">
+                  <div className="mt-6 grid grid-cols-1 gap-6 border-t border-slate-700/60 pt-6 md:grid-cols-2">
                     <div>
-                      <h4 className="font-display text-sm font-semibold text-slate-900">
+                      <h4 className="font-display text-sm font-semibold text-[#F8FAFC]">
                         Symptoms
                       </h4>
-                      <ul className="mt-2 list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-slate-700">
+                      <ul className="mt-2 list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-[#CBD5E1]">
                         {activeArticle.symptoms.map((s, idx) => (
                           <li key={idx}>{s}</li>
                         ))}
@@ -211,10 +217,10 @@ export default function KnowledgeBaseSection() {
                     </div>
 
                     <div>
-                      <h4 className="font-display text-sm font-semibold text-slate-900">
+                      <h4 className="font-display text-sm font-semibold text-[#F8FAFC]">
                         Possible Causes
                       </h4>
-                      <ul className="mt-2 list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-slate-700">
+                      <ul className="mt-2 list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-[#CBD5E1]">
                         {activeArticle.possibleCauses.map((c, idx) => (
                           <li key={idx}>{c}</li>
                         ))}
@@ -223,15 +229,15 @@ export default function KnowledgeBaseSection() {
                   </div>
 
                   {/* Diagnostic Commands */}
-                  <div className="mt-6 border-t border-slate-200 pt-6">
-                    <h4 className="font-display text-sm font-semibold text-slate-900">
+                  <div className="mt-6 border-t border-slate-700/60 pt-6">
+                    <h4 className="font-display text-sm font-semibold text-[#F8FAFC]">
                       Diagnostic Commands
                     </h4>
                     <div className="mt-3 space-y-2.5">
                       {activeArticle.diagnosticCommands.map((item) => (
                         <div key={item.command} className="space-y-1">
-                          <div className="text-xs font-medium text-slate-600">{item.label}</div>
-                          <div className="flex items-center justify-between gap-2 rounded-lg bg-slate-950 px-3.5 py-2.5 font-mono text-xs text-slate-100">
+                          <div className="text-xs font-medium text-[#CBD5E1]">{item.label}</div>
+                          <div className="flex items-center justify-between gap-2 rounded-lg border border-slate-700 bg-[#070D18] px-3.5 py-2.5 font-mono text-xs text-cyan-200">
                             <code className="overflow-x-auto whitespace-nowrap">{item.command}</code>
                             <button
                               type="button"
@@ -252,12 +258,12 @@ export default function KnowledgeBaseSection() {
                   </div>
 
                   {/* Solutions & Prevention */}
-                  <div className="mt-6 grid grid-cols-1 gap-6 border-t border-slate-200 pt-6 md:grid-cols-2">
+                  <div className="mt-6 grid grid-cols-1 gap-6 border-t border-slate-700/60 pt-6 md:grid-cols-2">
                     <div>
-                      <h4 className="font-display text-sm font-semibold text-slate-900">
+                      <h4 className="font-display text-sm font-semibold text-[#F8FAFC]">
                         Solutions
                       </h4>
-                      <ol className="mt-2 list-decimal space-y-1.5 pl-4 text-xs leading-relaxed text-slate-700">
+                      <ol className="mt-2 list-decimal space-y-1.5 pl-4 text-xs leading-relaxed text-[#CBD5E1]">
                         {activeArticle.solutions.map((sol, idx) => (
                           <li key={idx}>{sol}</li>
                         ))}
@@ -265,10 +271,10 @@ export default function KnowledgeBaseSection() {
                     </div>
 
                     <div>
-                      <h4 className="font-display text-sm font-semibold text-slate-900">
+                      <h4 className="font-display text-sm font-semibold text-[#F8FAFC]">
                         Prevention
                       </h4>
-                      <ul className="mt-2 list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-slate-700">
+                      <ul className="mt-2 list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-[#CBD5E1]">
                         {activeArticle.prevention.map((prev, idx) => (
                           <li key={idx}>{prev}</li>
                         ))}

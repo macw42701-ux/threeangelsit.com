@@ -12,8 +12,12 @@ export default function RealLifeTicketSection({
   onMarkSolved,
 }: RealLifeTicketSectionProps) {
   const [activeTicketId, setActiveTicketId] = useState<string>(REAL_LIFE_TICKETS[0].id);
-  const [executedChecksByTicket, setExecutedChecksByTicket] = useState<Record<string, DiagnosticCheck[]>>({});
-  const [selectedHypothesisByTicket, setSelectedHypothesisByTicket] = useState<Record<string, string>>({});
+  const [executedChecksByTicket, setExecutedChecksByTicket] = useState<
+    Record<string, DiagnosticCheck[]>
+  >({});
+  const [selectedHypothesisByTicket, setSelectedHypothesisByTicket] = useState<
+    Record<string, string>
+  >({});
   const [notesByTicket, setNotesByTicket] = useState<Record<string, string>>({});
   const [submittedByTicket, setSubmittedByTicket] = useState<Record<string, boolean>>({});
   const [copiedCmd, setCopiedCmd] = useState<string | null>(null);
@@ -61,23 +65,26 @@ export default function RealLifeTicketSection({
   };
 
   return (
-    <section id="tickets" className="border-b border-slate-200 bg-slate-50 py-14 lg:py-20">
+    <section id="tickets" className="border-b border-slate-800/80 bg-[#0B1220] py-16 lg:py-20">
       <div className="mx-auto max-w-7xl px-6">
         {/* Section header + ticket selector */}
-        <div className="flex flex-col justify-between gap-6 border-b border-slate-200 pb-6 lg:flex-row lg:items-end">
+        <div className="flex flex-col justify-between gap-6 border-b border-slate-800 pb-6 lg:flex-row lg:items-end">
           <div className="max-w-2xl">
-            <h2 className="font-display text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-              01. IT Engineer's Real-Life Ticket
+            <p className="font-mono text-xs font-semibold text-[#F59E0B]">
+              08. Simulated Support Challenges
+            </p>
+            <h2 className="mt-1 font-display text-2xl font-bold tracking-tight text-[#F8FAFC] sm:text-3xl">
+              Real-Life IT Tickets
             </h2>
-            <p className="mt-2 text-base text-slate-600">
-              Diagnose one realistic support incident at a time. Run diagnostic commands to gather evidence, lock in your root-cause hypothesis, and compare it against the suggested engineer solution.
+            <p className="mt-2 text-base text-[#CBD5E1]">
+              Diagnose one realistic support incident at a time. Run live checks to gather evidence, lock in your root-cause hypothesis, and compare it against the suggested engineer solution.
             </p>
           </div>
 
           <div
             role="tablist"
             aria-label="Select support ticket"
-            className="flex flex-wrap items-center gap-1 rounded-lg bg-slate-200/70 p-1"
+            className="flex flex-wrap items-center gap-1 rounded-lg border border-slate-700/70 bg-[#14243A]/70 p-1"
           >
             {REAL_LIFE_TICKETS.map((item) => {
               const isActive = item.id === ticket.id;
@@ -91,12 +98,14 @@ export default function RealLifeTicketSection({
                   onClick={() => setActiveTicketId(item.id)}
                   className={`inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-semibold whitespace-nowrap shrink-0 transition-colors duration-150 cursor-pointer ${
                     isActive
-                      ? 'bg-white text-slate-900 shadow-sm'
-                      : 'text-slate-600 hover:text-slate-900'
+                      ? 'bg-[#2563EB] text-white shadow-sm'
+                      : 'text-[#CBD5E1] hover:text-white'
                   }`}
                 >
                   <span className="font-mono tabular-nums">{item.number}</span>
-                  {isSolved && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" aria-label="Solved" />}
+                  {isSolved && (
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" aria-label="Solved" />
+                  )}
                 </button>
               );
             })}
@@ -107,54 +116,56 @@ export default function RealLifeTicketSection({
         <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12">
           {/* Left Zone: Ticket Brief + Diagnostic Actions + Live Console */}
           <div className="space-y-6 lg:col-span-7">
-            <div className="rounded-xl border border-slate-200 bg-white p-6">
-              {/* Unboxed typographic metadata */}
-              <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+            <div className="glass-surface rounded-2xl p-6">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-mono font-semibold text-blue-700 tabular-nums">{ticket.number}</span>
+                  <span className="font-mono font-semibold text-[#06B6D4] tabular-nums">
+                    {ticket.number}
+                  </span>
                   <span aria-hidden="true">·</span>
-                  <span>{ticket.category}</span>
+                  <span className="text-[#CBD5E1]">{ticket.category}</span>
                   <span aria-hidden="true">·</span>
-                  <span>{ticket.difficulty}</span>
+                  <span className="text-[#F59E0B]">{ticket.difficulty}</span>
                   <span aria-hidden="true">·</span>
                   <span className="tabular-nums">{ticket.estimatedTime}</span>
                 </div>
                 {solvedTicketIds.includes(ticket.id) && (
-                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700">
+                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400">
                     <CheckCircle2 className="h-3.5 w-3.5" />
                     Verified Solved
                   </span>
                 )}
               </div>
 
-              <h3 className="mt-3 font-display text-xl font-semibold text-slate-900" style={{ textWrap: 'balance' }}>
+              <h3
+                className="mt-3 font-display text-xl font-semibold text-[#F8FAFC]"
+                style={{ textWrap: 'balance' }}
+              >
                 {ticket.title}
               </h3>
 
-              <p className="mt-3 text-sm leading-relaxed text-slate-700">
-                {ticket.symptomSummary}
-              </p>
+              <p className="mt-3 text-sm leading-relaxed text-[#CBD5E1]">{ticket.symptomSummary}</p>
 
-              <blockquote className="mt-4 rounded-lg bg-slate-50 p-4 text-sm italic text-slate-700 border border-slate-200">
+              <blockquote className="mt-4 rounded-xl border border-slate-700 bg-[#0B1220] p-4 text-sm italic text-[#CBD5E1]">
                 “{ticket.userQuote}”
-                <footer className="mt-2 not-italic text-xs font-medium text-slate-500">
+                <footer className="mt-2 not-italic text-xs font-medium text-slate-400">
                   — {ticket.reporter}, {ticket.department} · Host {ticket.device} ({ticket.os})
                 </footer>
               </blockquote>
 
-              <p className="mt-3 font-mono text-xs text-slate-500">
+              <p className="mt-3 font-mono text-xs text-[#06B6D4]">
                 Environment: {ticket.networkContext}
               </p>
             </div>
 
             {/* Diagnostic Command Deck */}
-            <div className="rounded-xl border border-slate-200 bg-white p-6">
+            <div className="glass-surface rounded-2xl p-6">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <h4 className="font-display text-base font-semibold text-slate-900">
+                  <h4 className="font-display text-base font-semibold text-[#F8FAFC]">
                     Step 1: Run Diagnostic Checks
                   </h4>
-                  <p className="mt-0.5 text-xs text-slate-500 tabular-nums">
+                  <p className="mt-0.5 text-xs text-[#CBD5E1] tabular-nums">
                     {executedChecks.length} of {ticket.checks.length} checks executed
                   </p>
                 </div>
@@ -163,7 +174,7 @@ export default function RealLifeTicketSection({
                   <button
                     type="button"
                     onClick={handleResetTicket}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 whitespace-nowrap shrink-0 hover:bg-slate-50 hover:text-slate-900 cursor-pointer"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-[#0B1220] px-3 py-1.5 text-xs font-medium text-[#CBD5E1] whitespace-nowrap shrink-0 hover:border-cyan-400 hover:text-white cursor-pointer"
                   >
                     <RotateCcw className="h-3.5 w-3.5" />
                     Reset Session
@@ -181,14 +192,14 @@ export default function RealLifeTicketSection({
                       onClick={() => handleRunCheck(check)}
                       className={`inline-flex min-h-[40px] items-center gap-2 rounded-lg border px-3.5 py-2 text-xs font-medium whitespace-nowrap shrink-0 transition-colors duration-150 cursor-pointer ${
                         alreadyRun
-                          ? 'border-blue-200 bg-blue-50 text-blue-800'
-                          : 'border-slate-300 bg-white text-slate-800 hover:border-blue-400 hover:bg-slate-50'
+                          ? 'border-cyan-500/60 bg-cyan-950/40 text-cyan-200'
+                          : 'border-slate-700 bg-[#0B1220] text-[#CBD5E1] hover:border-blue-500 hover:text-white'
                       }`}
                     >
                       {alreadyRun ? (
-                        <Check className="h-3.5 w-3.5 text-blue-700" />
+                        <Check className="h-3.5 w-3.5 text-[#06B6D4]" />
                       ) : (
-                        <Play className="h-3.5 w-3.5 text-slate-500" />
+                        <Play className="h-3.5 w-3.5 text-[#F59E0B]" />
                       )}
                       {check.label}
                     </button>
@@ -197,10 +208,10 @@ export default function RealLifeTicketSection({
               </div>
 
               {/* Monospace Diagnostic Output Terminal */}
-              <div className="mt-5 overflow-hidden rounded-lg border border-slate-800 bg-slate-950 text-slate-100">
+              <div className="mt-5 overflow-hidden rounded-xl border border-slate-700 bg-[#070D18] text-slate-100">
                 <div className="flex items-center justify-between border-b border-slate-800 px-4 py-2.5 text-xs text-slate-400">
                   <span className="inline-flex items-center gap-2 font-mono">
-                    <Terminal className="h-3.5 w-3.5 text-blue-400" />
+                    <Terminal className="h-3.5 w-3.5 text-[#06B6D4]" />
                     Diagnostic Output Console
                   </span>
                   <span className="font-mono">{ticket.device}</span>
@@ -213,14 +224,18 @@ export default function RealLifeTicketSection({
                     </p>
                   ) : (
                     executedChecks.map((check) => (
-                      <div key={check.id} className="space-y-2 border-b border-slate-800/80 pb-4 last:border-b-0 last:pb-0">
-                        <div className="text-blue-400">
+                      <div
+                        key={check.id}
+                        className="space-y-2 border-b border-slate-800/80 pb-4 last:border-b-0 last:pb-0"
+                      >
+                        <div className="text-cyan-300">
                           <span className="text-slate-500">PS C:\Users\itadmin&gt; </span>
                           {check.command}
                         </div>
                         <pre className="whitespace-pre-wrap text-slate-200">{check.output}</pre>
-                        <div className="rounded bg-slate-900 px-3 py-2 text-[11px] text-slate-300 border border-slate-800">
-                          <strong className="font-semibold text-white">Observation:</strong> {check.finding}
+                        <div className="rounded-lg border border-slate-800 bg-[#0F1B2E] px-3 py-2 text-[11px] text-[#CBD5E1]">
+                          <strong className="font-semibold text-[#F59E0B]">Observation:</strong>{' '}
+                          {check.finding}
                         </div>
                       </div>
                     ))
@@ -232,11 +247,11 @@ export default function RealLifeTicketSection({
 
           {/* Right Zone: Hypothesis Selection & Answer Comparison */}
           <div className="space-y-6 lg:col-span-5">
-            <div className="rounded-xl border border-slate-200 bg-white p-6">
-              <h4 className="font-display text-base font-semibold text-slate-900">
+            <div className="glass-surface rounded-2xl p-6">
+              <h4 className="font-display text-base font-semibold text-[#F8FAFC]">
                 Step 2: Select Root Cause & Compare Solution
               </h4>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-[#CBD5E1]">
                 Based on your diagnostic evidence, pick the true root cause before revealing the senior engineer solution.
               </p>
 
@@ -247,10 +262,10 @@ export default function RealLifeTicketSection({
                   return (
                     <label
                       key={hyp.id}
-                      className={`block cursor-pointer rounded-lg border p-3.5 transition-colors duration-150 ${
+                      className={`block cursor-pointer rounded-xl border p-3.5 transition-colors duration-150 ${
                         isSelected
-                          ? 'border-blue-600 bg-blue-50/50'
-                          : 'border-slate-200 bg-white hover:border-slate-300'
+                          ? 'border-cyan-400/80 bg-[#0B1220]'
+                          : 'border-slate-700/70 bg-[#0B1220]/70 hover:border-slate-500'
                       }`}
                     >
                       <div className="flex items-start gap-3">
@@ -269,11 +284,13 @@ export default function RealLifeTicketSection({
                               [ticket.id]: false,
                             }));
                           }}
-                          className="mt-1 h-4 w-4 text-blue-700 focus:ring-blue-700"
+                          className="mt-1 h-4 w-4 accent-[#06B6D4]"
                         />
                         <div>
-                          <div className="text-sm font-semibold text-slate-900">{hyp.title}</div>
-                          <div className="mt-1 text-xs leading-relaxed text-slate-600">{hyp.summary}</div>
+                          <div className="text-sm font-semibold text-[#F8FAFC]">{hyp.title}</div>
+                          <div className="mt-1 text-xs leading-relaxed text-[#CBD5E1]">
+                            {hyp.summary}
+                          </div>
                         </div>
                       </div>
                     </label>
@@ -282,7 +299,10 @@ export default function RealLifeTicketSection({
               </fieldset>
 
               <div className="mt-5">
-                <label htmlFor={`notes-${ticket.id}`} className="block text-xs font-semibold text-slate-700">
+                <label
+                  htmlFor={`notes-${ticket.id}`}
+                  className="block text-xs font-semibold text-[#CBD5E1]"
+                >
                   Your Troubleshooting Notes / Fix Plan (Optional)
                 </label>
                 <textarea
@@ -294,7 +314,7 @@ export default function RealLifeTicketSection({
                     setNotesByTicket((prev) => ({ ...prev, [ticket.id]: e.target.value }))
                   }
                   placeholder="Write what command or change you would execute to fix this for the user..."
-                  className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:outline-none"
+                  className="mt-1.5 w-full rounded-lg border border-slate-700 bg-[#0B1220] px-3 py-2 text-sm text-[#F8FAFC] placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none"
                 />
               </div>
 
@@ -302,7 +322,7 @@ export default function RealLifeTicketSection({
                 type="button"
                 disabled={!selectedHypothesisId}
                 onClick={handleSubmitDiagnosis}
-                className="mt-4 flex min-h-[44px] w-full items-center justify-center rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-blue-800 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 cursor-pointer"
+                className="mt-4 flex min-h-[44px] w-full items-center justify-center rounded-lg bg-[#2563EB] px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400 cursor-pointer"
               >
                 Submit Diagnosis & Compare Answer
               </button>
@@ -310,18 +330,18 @@ export default function RealLifeTicketSection({
 
             {/* Solution Comparison Output */}
             {isSubmitted && selectedHypothesis && (
-              <div className="rounded-xl border border-slate-200 bg-white p-6">
+              <div className="glass-surface rounded-2xl p-6">
                 <div
-                  className={`flex items-start gap-3 rounded-lg border p-3.5 ${
+                  className={`flex items-start gap-3 rounded-xl border p-3.5 ${
                     selectedHypothesis.isCorrect
-                      ? 'border-emerald-200 bg-emerald-50 text-emerald-900'
-                      : 'border-amber-200 bg-amber-50 text-amber-900'
+                      ? 'border-emerald-500/50 bg-emerald-950/40 text-emerald-200'
+                      : 'border-amber-500/50 bg-amber-950/40 text-amber-200'
                   }`}
                 >
                   {selectedHypothesis.isCorrect ? (
-                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-700" />
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
                   ) : (
-                    <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-amber-700" />
+                    <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-amber-400" />
                   )}
                   <div className="text-xs leading-relaxed">
                     <div className="font-semibold">
@@ -332,26 +352,26 @@ export default function RealLifeTicketSection({
                 </div>
 
                 {userNotes.trim() && (
-                  <div className="mt-4 border-b border-slate-200 pb-4">
-                    <h5 className="text-xs font-semibold text-slate-500">Your Proposed Notes</h5>
-                    <p className="mt-1 text-sm text-slate-800">{userNotes}</p>
+                  <div className="mt-4 border-b border-slate-700/60 pb-4">
+                    <h5 className="text-xs font-semibold text-slate-400">Your Proposed Notes</h5>
+                    <p className="mt-1 text-sm text-[#F8FAFC]">{userNotes}</p>
                   </div>
                 )}
 
                 <div className="mt-4 space-y-4">
                   <div>
-                    <h5 className="font-display text-sm font-semibold text-slate-900">
+                    <h5 className="font-display text-sm font-semibold text-[#F8FAFC]">
                       Suggested Senior Engineer Answer
                     </h5>
-                    <p className="mt-1 text-xs leading-relaxed text-slate-700">
-                      <strong className="text-slate-900">Root Cause: </strong>
+                    <p className="mt-1 text-xs leading-relaxed text-[#CBD5E1]">
+                      <strong className="text-[#06B6D4]">Root Cause: </strong>
                       {ticket.suggestedSolution.rootCause}
                     </p>
                   </div>
 
                   <div>
-                    <h6 className="text-xs font-semibold text-slate-800">Resolution Steps</h6>
-                    <ol className="mt-1.5 list-decimal space-y-1.5 pl-4 text-xs leading-relaxed text-slate-700">
+                    <h6 className="text-xs font-semibold text-[#F8FAFC]">Resolution Steps</h6>
+                    <ol className="mt-1.5 list-decimal space-y-1.5 pl-4 text-xs leading-relaxed text-[#CBD5E1]">
                       {ticket.suggestedSolution.remediationSteps.map((step, idx) => (
                         <li key={idx}>{step}</li>
                       ))}
@@ -359,12 +379,12 @@ export default function RealLifeTicketSection({
                   </div>
 
                   <div>
-                    <h6 className="text-xs font-semibold text-slate-800">Remediation Commands</h6>
+                    <h6 className="text-xs font-semibold text-[#F8FAFC]">Remediation Commands</h6>
                     <div className="mt-1.5 space-y-1.5">
                       {ticket.suggestedSolution.commands.map((cmd) => (
                         <div
                           key={cmd}
-                          className="flex items-center justify-between gap-2 rounded-lg border border-slate-200 bg-slate-950 px-3 py-2 font-mono text-xs text-slate-100"
+                          className="flex items-center justify-between gap-2 rounded-lg border border-slate-700 bg-[#070D18] px-3 py-2 font-mono text-xs text-cyan-200"
                         >
                           <code className="truncate">{cmd}</code>
                           <button
@@ -373,7 +393,11 @@ export default function RealLifeTicketSection({
                             aria-label={`Copy command ${cmd}`}
                             className="inline-flex items-center gap-1 rounded px-2 py-1 text-[11px] text-slate-300 hover:bg-slate-800 hover:text-white shrink-0 cursor-pointer"
                           >
-                            {copiedCmd === cmd ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
+                            {copiedCmd === cmd ? (
+                              <Check className="h-3 w-3 text-emerald-400" />
+                            ) : (
+                              <Copy className="h-3 w-3" />
+                            )}
                             {copiedCmd === cmd ? 'Copied' : 'Copy'}
                           </button>
                         </div>
@@ -381,8 +405,8 @@ export default function RealLifeTicketSection({
                     </div>
                   </div>
 
-                  <div className="border-t border-slate-200 pt-3 text-xs text-slate-600">
-                    <strong className="text-slate-900">Prevention: </strong>
+                  <div className="border-t border-slate-700/60 pt-3 text-xs text-[#CBD5E1]">
+                    <strong className="text-[#F59E0B]">Prevention: </strong>
                     {ticket.suggestedSolution.prevention}
                   </div>
                 </div>

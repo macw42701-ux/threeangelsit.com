@@ -1354,3 +1354,386 @@ export const KNOWLEDGE_BASE: KnowledgeArticle[] = [
     ],
   },
 ];
+
+export interface CourseModule {
+  id: string;
+  title: string;
+  duration: string;
+}
+
+export interface FreeCourse {
+  id: string;
+  title: string;
+  level: 'Beginner' | 'Intermediate';
+  duration: string;
+  category: string;
+  summary: string;
+  outcomes: string[];
+  modules: CourseModule[];
+  practiceTarget: {
+    label: string;
+    sectionId: string;
+  };
+}
+
+export interface TechnicalSolutionDomain {
+  id: string;
+  title: string;
+  subtitle: string;
+  summary: string;
+  capabilities: string[];
+  checklist: string[];
+  relatedSection: {
+    label: string;
+    sectionId: string;
+  };
+}
+
+export interface DigitalResourceItem {
+  id: string;
+  title: string;
+  format: string;
+  category: string;
+  summary: string;
+  fileName: string;
+  content: string;
+}
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  category: string;
+  published: string;
+  readTime: string;
+  excerpt: string;
+  sections: {
+    heading: string;
+    body: string;
+  }[];
+  relatedSection: {
+    label: string;
+    sectionId: string;
+  };
+}
+
+export const FREE_COURSES: FreeCourse[] = [
+  {
+    id: 'course-hardware-os',
+    title: 'Computer Hardware & OS Internals',
+    level: 'Beginner',
+    duration: '4 Weeks · Self-Paced',
+    category: 'Foundations',
+    summary:
+      'Understand PC architecture, UEFI/BIOS boot, RAM/storage health, Windows Registry basics, and Linux filesystem permissions from first principles.',
+    outcomes: [
+      'Troubleshoot boot failures and disk bottlenecks systematically',
+      'Inspect Windows Event Viewer logs and Linux directory permissions',
+    ],
+    modules: [
+      { id: 'c1-m1', title: '01. CPU, Memory, NVMe & Power Delivery Architecture', duration: '35 min' },
+      { id: 'c1-m2', title: '02. UEFI Firmware, Partition Tables (GPT) & Boot Flow', duration: '40 min' },
+      { id: 'c1-m3', title: '03. Windows Services, Registry & Event Logs', duration: '45 min' },
+      { id: 'c1-m4', title: '04. Linux File Hierarchy & POSIX rwx Permissions', duration: '45 min' },
+    ],
+    practiceTarget: { label: 'Practice Permissions in Virtual Lab', sectionId: 'lab' },
+  },
+  {
+    id: 'course-networking',
+    title: 'Practical Networking & TCP/IP Troubleshooting',
+    level: 'Beginner',
+    duration: '5 Weeks · Self-Paced',
+    category: 'Networking',
+    summary:
+      'Follow real packets across switches, VLANs, routers, DHCP, and DNS. Learn why name resolution causes half of helpdesk tickets and how to isolate faults fast.',
+    outcomes: [
+      'Read IPv4 subnets, default gateways, and ARP tables cleanly',
+      'Diagnose DNS NXDOMAIN, APIPA 169.254.x.x, and firewall port blocks',
+    ],
+    modules: [
+      { id: 'c2-m1', title: '01. OSI Model Applied to Real Helpdesk Triage', duration: '30 min' },
+      { id: 'c2-m2', title: '02. IPv4 Subnetting, Gateways & DHCP DORA Flow', duration: '50 min' },
+      { id: 'c2-m3', title: '03. DNS Resolution, Suffixes & Split-Horizon Records', duration: '40 min' },
+      { id: 'c2-m4', title: '04. Switching, VLAN Tagging & SMB Port 445 Checks', duration: '45 min' },
+    ],
+    practiceTarget: { label: 'Open Network Packet Simulator', sectionId: 'lab' },
+  },
+  {
+    id: 'course-sysadmin',
+    title: 'Windows & Linux Systems Administration',
+    level: 'Intermediate',
+    duration: '6 Weeks · Self-Paced',
+    category: 'Administration',
+    summary:
+      'Manage enterprise endpoints, Active Directory identity sessions, systemd daemons, socket listeners, and PowerShell/Bash diagnostic workflows.',
+    outcomes: [
+      'Resolve Print Spooler, Credential Manager, and AD lockouts via CLI',
+      'Inspect Linux ports with ss, tail logs, and manage systemd services',
+    ],
+    modules: [
+      { id: 'c3-m1', title: '01. Active Directory, Kerberos & Group Policy Fundamentals', duration: '50 min' },
+      { id: 'c3-m2', title: '02. Windows PowerShell & Service Recovery Drills', duration: '45 min' },
+      { id: 'c3-m3', title: '03. Linux systemd, Journalctl & Socket Inspection (ss)', duration: '45 min' },
+      { id: 'c3-m4', title: '04. Automating Health Checks with Bash & PowerShell', duration: '55 min' },
+    ],
+    practiceTarget: { label: 'Solve Live Incident INC-2048', sectionId: 'tickets' },
+  },
+  {
+    id: 'course-security-cloud',
+    title: 'Cybersecurity Hygiene & Cloud Foundations',
+    level: 'Intermediate',
+    duration: '5 Weeks · Self-Paced',
+    category: 'Security & Cloud',
+    summary:
+      'Bridge on-premises infrastructure to cloud virtual networks, least-privilege IAM policies, phishing defense, MFA hardening, and incident triage.',
+    outcomes: [
+      'Spot lookalike SSO phishing domains and contain MFA fatigue attempts',
+      'Map VLANs and firewalls to cloud VPC subnets and security groups',
+    ],
+    modules: [
+      { id: 'c4-m1', title: '01. Phishing Anatomy, DNS Spoofing & Email Headers', duration: '35 min' },
+      { id: 'c4-m2', title: '02. Password Managers, FIDO2 Keys & MFA Hardening', duration: '40 min' },
+      { id: 'c4-m3', title: '03. Cloud VPC Networking, Subnets & Security Groups', duration: '50 min' },
+      { id: 'c4-m4', title: '04. Auth Log Threat Hunting & Containment Playbooks', duration: '45 min' },
+    ],
+    practiceTarget: { label: 'Run IT Awareness Drills', sectionId: 'awareness' },
+  },
+];
+
+export const TECHNICAL_SOLUTIONS: TechnicalSolutionDomain[] = [
+  {
+    id: 'sol-networking',
+    title: 'Networking & Wi-Fi Architecture',
+    subtitle: 'VLAN Segmentation · DNS/DHCP · VPN Reliability',
+    summary:
+      'Structured campus and remote connectivity built around clean VLAN isolation, redundant internal DNS resolvers, and properly clamped VPN MTU paths.',
+    capabilities: [
+      'Office switch port provisioning, VLAN segmentation, and PoE planning',
+      'Internal Active Directory DNS & DHCP scope high-availability design',
+      'Remote-access VPN split-tunneling and Path MTU blackhole prevention',
+    ],
+    checklist: [
+      'Verify internal DNS options (006/015) across every production DHCP scope',
+      'Isolate guest Wi-Fi traffic completely from internal file server subnets',
+      'Document wall-jack to switch-port mappings before desk reassignments',
+    ],
+    relatedSection: { label: 'Test in Network Simulator', sectionId: 'lab' },
+  },
+  {
+    id: 'sol-hardware',
+    title: 'Hardware & Endpoint Engineering',
+    subtitle: 'Diagnostics · Fleet Health · Peripheral Reliability',
+    summary:
+      'Repeatable hardware triage covering SSD SMART health, thermal throttling, docking station NIC negotiation, and enterprise printer stability.',
+    capabilities: [
+      'Standardized Layer-1 cable, NIC link-speed, and dock firmware checks',
+      'Type-4 universal printer driver deployment and spooler recovery automation',
+      'Workstation imaging, BIOS/UEFI baseline hardening, and BitLocker recovery',
+    ],
+    checklist: [
+      'Verify 1 Gbps link negotiation before replacing Ethernet runs',
+      'Purge corrupted .SPL/.SHD queue files cleanly when print jobs stall',
+      'Maintain offline recovery keys in centralized endpoint management',
+    ],
+    relatedSection: { label: 'Practice Windows Scenarios', sectionId: 'lab' },
+  },
+  {
+    id: 'sol-software',
+    title: 'Software, OS & Automation',
+    subtitle: 'Windows 11 · Ubuntu/RHEL Linux · Scripting',
+    summary:
+      'Reliable operating system operations using deterministic CLI runbooks, clean service dependency management, and automated fleet verification.',
+    capabilities: [
+      'Windows service lifecycle, Credential Manager cleanup, and SMB3 enforcement',
+      'Linux systemd daemon orchestration, Nginx reverse proxies, and logrotate',
+      'Cross-platform PowerShell and Bash diagnostic scripts for Tier-1 teams',
+    ],
+    checklist: [
+      'Validate Nginx syntax (nginx -t) before reloading production proxies',
+      'Monitor both disk blocks (df -h) and inode availability (df -ih)',
+      'Clear stale cached credentials after scheduled user password resets',
+    ],
+    relatedSection: { label: 'Open Knowledge Base', sectionId: 'kb' },
+  },
+  {
+    id: 'sol-security',
+    title: 'Infrastructure & Identity Security',
+    subtitle: 'Zero-Trust Access · MFA Hardening · Log Triage',
+    summary:
+      'Defense-in-depth safeguards protecting user credentials, SSH endpoints, file shares, and remote sessions without slowing down legitimate work.',
+    capabilities: [
+      'FIDO2/number-matching MFA rollout to neutralize push-bombing fatigue',
+      'SSH key-only authentication, fail2ban/auth.log auditing, and SMB signing',
+      'Employee phishing readiness drills and safe data-handling guidelines',
+    ],
+    checklist: [
+      'Revoke active refresh tokens immediately upon any unexpected MFA push',
+      'Disable legacy SMBv1 and anonymous share enumeration across servers',
+      'Audit /var/log/auth.log regularly for repeated invalid-user SSH probes',
+    ],
+    relatedSection: { label: 'Review Awareness Drills', sectionId: 'awareness' },
+  },
+];
+
+export const DIGITAL_RESOURCES: DigitalResourceItem[] = [
+  {
+    id: 'res-ports-tcpip',
+    title: 'TCP/IP, Subnets & Essential Ports Quick Guide',
+    format: 'Study Guide (.md)',
+    category: 'Networking Reference',
+    summary:
+      'Printable reference sheet covering common enterprise ports (DNS 53, HTTP/S 80/443, SMB 445, SSH 22, RDP 3389), CIDR masks, and APIPA rules.',
+    fileName: 'Three-Angels-TCPIP-Ports-Guide.md',
+    content: `# Three Angels IT Services — TCP/IP & Essential Ports Reference
+
+## 1. Essential Infrastructure Ports
+- Port 22 (TCP): SSH — Secure Linux/Network CLI Administration
+- Port 53 (UDP/TCP): DNS — Hostname to IP Resolution
+- Port 67/68 (UDP): DHCP — Dynamic IP Lease Assignment (DORA)
+- Port 80 (TCP): HTTP — Unencrypted Web (Redirect to 443)
+- Port 443 (TCP): HTTPS — TLS-Encrypted Web & APIs
+- Port 445 (TCP): SMB3 — Windows Corporate Shared Folders
+- Port 3389 (TCP/UDP): RDP — Windows Remote Desktop
+
+## 2. Quick Triage Signals
+- IP starts with 169.254.x.x -> APIPA fallback (DHCP server unreachable or wrong VLAN)
+- Ping by IP works, hostname fails -> DNS resolver mismatch or suffix issue
+- Small ping works, HTTPS stalls over VPN -> Path MTU blackhole (test ping -f -l 1350)
+`,
+  },
+  {
+    id: 'res-cli-cheatsheet',
+    title: 'Windows & Linux Diagnostic Command Sheet',
+    format: 'Command Sheet (.md)',
+    category: 'SysAdmin Triage',
+    summary:
+      'Side-by-side Windows CMD/PowerShell and Linux Bash commands for inspecting IPs, DNS lookups, open sockets, disk space, and system services.',
+    fileName: 'Three-Angels-CLI-Diagnostic-Sheet.md',
+    content: `# Three Angels IT Services — Windows & Linux Triage Commands
+
+## Network & DNS
+- Windows: ipconfig /all | ipconfig /flushdns | nslookup host.corp.internal
+- Windows Port Test: Test-NetConnection -ComputerName 10.20.4.15 -Port 445
+- Linux: ip addr | ss -tulpn | dig host.corp.internal
+
+## Services & Logs
+- Windows: sc query spooler | net stop spooler && net start spooler
+- Windows Creds: cmdkey /list | cmdkey /delete:target
+- Linux Services: systemctl status nginx | journalctl -u nginx -n 30
+- Linux Auth Hunt: grep "Failed password" /var/log/auth.log | tail -n 10
+
+## Storage & Permissions
+- Linux Disk & Inodes: df -h && df -ih
+- Linux Permissions: ls -la /opt/backup/run.sh && chmod +x /opt/backup/run.sh
+`,
+  },
+  {
+    id: 'res-security-playbook',
+    title: 'Phishing & MFA Fatigue Defense Checklist',
+    format: 'Security Checklist (.md)',
+    category: 'Cybersecurity',
+    summary:
+      'Practical daily verification habits for spotting lookalike SSO domains, rejecting evil-twin public Wi-Fi portals, and responding to push bombing.',
+    fileName: 'Three-Angels-Security-Awareness-Playbook.md',
+    content: `# Three Angels IT Services — Security Awareness Playbook
+
+## 1. Before Entering Any Password
+1. Inspect the exact host domain immediately before the first single slash (/).
+2. Never follow urgent "Password Expires in 2 Hours" email links—open your saved corporate bookmark directly.
+3. Never enter work credentials into airport, cafe, or hotel Wi-Fi captive portals.
+
+## 2. If You Receive Unexpected MFA Push Prompts
+1. Tap DENY immediately—never approve a prompt you did not initiate.
+2. Rotate your primary SSO password right away (an attacker already possesses it).
+3. Notify IT Security to revoke active session tokens and review registered MFA devices.
+`,
+  },
+  {
+    id: 'res-ticket-framework',
+    title: '5-Step Helpdesk Ticket Resolution Framework',
+    format: 'Workflow Guide (.md)',
+    category: 'IT Support',
+    summary:
+      'A repeatable engineering method for moving from vague user complaints to verified root cause, clean remediation, and permanent prevention.',
+    fileName: 'Three-Angels-Ticket-Resolution-Framework.md',
+    content: `# Three Angels IT Services — 5-Step Ticket Resolution Method
+
+1. Clarify Symptom & Scope: Single user or whole department? What changed recently?
+2. Isolate by Layer: Physical Link -> IP/DHCP -> DNS -> Port/Firewall -> Permissions.
+3. Capture Evidence: Save exact command output (ipconfig, nslookup, ss) before making changes.
+4. Apply Minimal Fix & Verify: Confirm the user can complete their real task end-to-end.
+5. Document Prevention: Record root cause, exact command fix, and preventive guardrails.
+`,
+  },
+];
+
+export const IT_BLOG_POSTS: BlogPost[] = [
+  {
+    id: 'blog-dns-smb',
+    title: 'Why Internet Browsing Works While Your Company Shared Folder Fails',
+    category: 'Networking & Windows',
+    published: 'November 2026',
+    readTime: '4 min read',
+    excerpt:
+      'One of the most common helpdesk mysteries—error 0x80070035—almost always comes down to DNS resolver overrides rather than a crashed file server.',
+    sections: [
+      {
+        heading: 'The Misleading Symptom',
+        body: 'When a user can open external websites normally, it is tempting to assume the network is healthy and blame the file server or NTFS permissions. In reality, external sites resolve via public DNS (like 1.1.1.1 or 8.8.8.8), whereas internal hostnames such as fileserver01.corp.internal only exist inside your private Active Directory DNS zone.',
+      },
+      {
+        heading: 'Proving the Root Cause in 60 Seconds',
+        body: 'Run ipconfig /all first. If you see public DNS servers instead of your internal domain controller IP, test ping against the file server IP directly and verify TCP port 445 with Test-NetConnection. When the IP succeeds and nslookup returns Non-existent domain, you have 100% proof it is a DNS configuration fault.',
+      },
+      {
+        heading: 'Permanent Fix',
+        body: 'Restore DHCP-assigned DNS on the adapter, flush the negative DNS cache with ipconfig /flushdns, and lock DNS adapter settings via Group Policy so local overrides do not recur.',
+      },
+    ],
+    relatedSection: { label: 'Try Ticket INC-2048 Now', sectionId: 'tickets' },
+  },
+  {
+    id: 'blog-linux-triage',
+    title: 'Three Linux Commands That Solve 80% of Service Outages',
+    category: 'Linux Operations',
+    published: 'November 2026',
+    readTime: '5 min read',
+    excerpt:
+      'Before rebooting a Linux server during an outage, inspect listening sockets, service journals, and inode capacity to find the true culprit.',
+    sections: [
+      {
+        heading: '1. Inspect Listening Sockets with ss -tulpn',
+        body: 'Port conflicts happen frequently when two daemons compete for port 80 or 8080. Running ss -tulpn immediately reveals which process name and PID owns every listening TCP/UDP socket.',
+      },
+      {
+        heading: '2. Read Recent Service Logs with journalctl & grep',
+        body: 'Never guess why a daemon stopped. Check systemctl status and tail the relevant unit log or /var/log/auth.log to distinguish configuration syntax errors from permission failures or brute-force probes.',
+      },
+      {
+        heading: '3. Check Both df -h and df -ih',
+        body: 'A disk can report 40% free gigabytes and still fail writes with "No space left on device" if millions of tiny session files exhaust 100% of filesystem inodes.',
+      },
+    ],
+    relatedSection: { label: 'Practice in Linux Lab', sectionId: 'lab' },
+  },
+  {
+    id: 'blog-mfa-fatigue',
+    title: 'How Lookalike SSO Pages & MFA Fatigue Bypass Standard Passwords',
+    category: 'Cybersecurity',
+    published: 'October 2026',
+    readTime: '4 min read',
+    excerpt:
+      'Why modern attackers pair reverse-proxy login clones with midnight push notifications—and how number-matching MFA and FIDO2 keys stop them cold.',
+    sections: [
+      {
+        heading: 'Anatomy of an MFA Push Attack',
+        body: 'Once credentials are captured via a typosquatted domain or reused password breach, automated scripts submit login requests repeatedly late at night. An exhausted user who taps "Approve" just to silence their phone hands over a valid authenticated session.',
+      },
+      {
+        heading: 'Practical Team Defenses',
+        body: 'Enforce number-matching MFA or hardware FIDO2 passkeys, educate staff to deny unexpected prompts immediately, and treat any uninitiated MFA alert as a confirmed password compromise requiring immediate session revocation.',
+      },
+    ],
+    relatedSection: { label: 'Inspect Phishing Drill', sectionId: 'awareness' },
+  },
+];
+
