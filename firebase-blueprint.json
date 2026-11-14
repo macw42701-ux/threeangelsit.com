@@ -1,0 +1,275 @@
+{
+  "entities": {
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Authorized administrator account allowlist entry.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "email": { "type": "string", "format": "email", "maxLength": 160 },
+        "role": { "type": "string", "enum": ["Super Admin", "Content Editor", "Support Reviewer"] },
+        "status": { "type": "string", "enum": ["Active", "Pending Invite", "Suspended"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "email", "role", "status", "createdAt"]
+    },
+    "PlatformUser": {
+      "title": "PlatformUser",
+      "description": "Managed platform user directory record (no passwords stored).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "email": { "type": "string", "format": "email", "maxLength": 160 },
+        "role": { "type": "string", "enum": ["Super Admin", "Editor", "Instructor", "Reader"] },
+        "status": { "type": "string", "enum": ["Active", "Invited", "Disabled"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "email", "role", "status", "createdAt"]
+    },
+    "Article": {
+      "title": "Article",
+      "description": "IT Blog article with SEO metadata and draft/published workflow.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 3, "maxLength": 200 },
+        "subtitle": { "type": "string", "maxLength": 400 },
+        "content": { "type": "string", "minLength": 10, "maxLength": 50000 },
+        "featuredImage": { "type": "string", "maxLength": 2000 },
+        "author": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "category": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "tags": { "type": "array" },
+        "seoTitle": { "type": "string", "maxLength": 200 },
+        "seoDescription": { "type": "string", "maxLength": 400 },
+        "status": { "type": "string", "enum": ["Published", "Draft"] },
+        "publishedDate": { "type": "string", "maxLength": 40 },
+        "featured": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "content", "author", "category", "status", "publishedDate", "featured", "updatedAt"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Content taxonomy category.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "name": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "scope": { "type": "string", "enum": ["blog", "awareness", "course", "knowledge_base", "resource", "media"] },
+        "slug": { "type": "string", "minLength": 1, "maxLength": 120 }
+      },
+      "required": ["id", "name", "scope", "slug"]
+    },
+    "Course": {
+      "title": "Course",
+      "description": "Free IT course track.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 3, "maxLength": 200 },
+        "description": { "type": "string", "minLength": 10, "maxLength": 5000 },
+        "thumbnailUrl": { "type": "string", "maxLength": 2000 },
+        "level": { "type": "string", "enum": ["Beginner", "Intermediate", "Advanced"] },
+        "category": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "learningObjectives": { "type": "array" },
+        "lessonIds": { "type": "array" },
+        "materialIds": { "type": "array" },
+        "duration": { "type": "string", "maxLength": 80 },
+        "status": { "type": "string", "enum": ["Published", "Draft"] },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "description", "level", "category", "status", "updatedAt"]
+    },
+    "Lesson": {
+      "title": "Lesson",
+      "description": "Individual lesson within a course.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "courseId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 2, "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "content": { "type": "string", "maxLength": 50000 },
+        "videoUrl": { "type": "string", "maxLength": 2000 },
+        "pdfResourceIds": { "type": "array" },
+        "practicalExercise": { "type": "string", "maxLength": 5000 },
+        "quizQuestions": { "type": "array" },
+        "sequence": { "type": "number" },
+        "status": { "type": "string", "enum": ["Published", "Draft"] },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "courseId", "title", "sequence", "status", "updatedAt"]
+    },
+    "Quiz": {
+      "title": "Quiz",
+      "description": "Quiz bank associated with a lesson.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "lessonId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "questions": { "type": "array" }
+      },
+      "required": ["id", "lessonId", "questions"]
+    },
+    "AwarenessPost": {
+      "title": "AwarenessPost",
+      "description": "Weekly IT awareness and cybersecurity guidance post.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "weekLabel": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "title": { "type": "string", "minLength": 3, "maxLength": 200 },
+        "category": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "summary": { "type": "string", "minLength": 10, "maxLength": 2000 },
+        "imageUrl": { "type": "string", "maxLength": 2000 },
+        "cybersecurityTips": { "type": "array" },
+        "digitalSafetyGuidance": { "type": "array" },
+        "weeklyContent": { "type": "string", "maxLength": 20000 },
+        "status": { "type": "string", "enum": ["Published", "Draft"] },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "weekLabel", "title", "category", "summary", "status", "updatedAt"]
+    },
+    "KnowledgeBaseGuide": {
+      "title": "KnowledgeBaseGuide",
+      "description": "Technical troubleshooting runbook in the IT Knowledge Base.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 3, "maxLength": 200 },
+        "category": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "difficulty": { "type": "string", "enum": ["Beginner", "Intermediate", "Advanced"] },
+        "keywords": { "type": "array" },
+        "diagramUrl": { "type": "string", "maxLength": 2000 },
+        "steps": { "type": "array" },
+        "commands": { "type": "array" },
+        "status": { "type": "string", "enum": ["Published", "Draft"] },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "category", "difficulty", "steps", "status", "updatedAt"]
+    },
+    "DigitalResource": {
+      "title": "DigitalResource",
+      "description": "Downloadable study material, checklist, or guide.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 3, "maxLength": 200 },
+        "fileName": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "fileType": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "fileSizeBytes": { "type": "number" },
+        "category": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "uploadDate": { "type": "string", "maxLength": 40 },
+        "status": { "type": "string", "enum": ["Published", "Draft"] },
+        "description": { "type": "string", "maxLength": 1000 },
+        "content": { "type": "string", "maxLength": 100000 },
+        "downloadUrl": { "type": "string", "maxLength": 2000 }
+      },
+      "required": ["id", "title", "fileName", "fileType", "fileSizeBytes", "category", "uploadDate", "status"]
+    },
+    "MediaAsset": {
+      "title": "MediaAsset",
+      "description": "Verified image or media asset entry.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "altText": { "type": "string", "maxLength": 300 },
+        "category": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "fileName": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "mimeType": { "type": "string", "enum": ["image/jpeg", "image/png", "image/webp"] },
+        "sizeBytes": { "type": "number" },
+        "url": { "type": "string", "minLength": 1, "maxLength": 200000 },
+        "uploadedAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "title", "category", "fileName", "mimeType", "sizeBytes", "url", "uploadedAt"]
+    },
+    "WebsiteSettings": {
+      "title": "WebsiteSettings",
+      "description": "Public homepage, menu navigation, and SEO configuration.",
+      "type": "object",
+      "properties": {
+        "companyName": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "tagline": { "type": "string", "maxLength": 300 },
+        "supportNote": { "type": "string", "maxLength": 1000 },
+        "openAccessEnabled": { "type": "boolean" },
+        "homepage": { "type": "object" },
+        "menuItems": { "type": "array" },
+        "seo": { "type": "object" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["companyName", "openAccessEnabled", "homepage", "menuItems", "seo", "updatedAt"]
+    },
+    "ContactInquiry": {
+      "title": "ContactInquiry",
+      "description": "Visitor inquiry submitted via the public Contact Us form.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "email": { "type": "string", "format": "email", "maxLength": 120 },
+        "topic": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "message": { "type": "string", "minLength": 10, "maxLength": 1000 },
+        "status": { "type": "string", "enum": ["New", "Reviewed"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "email", "topic", "message", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/AdminUser" },
+      "description": "Authorized administrator allowlist documents keyed by Firebase Auth UID."
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/PlatformUser" },
+      "description": "Managed user directory records isolated by UID."
+    },
+    "/articles/{articleId}": {
+      "schema": { "$ref": "#/entities/Article" },
+      "description": "IT Blog articles; published items readable publicly, drafts and writes restricted to admins."
+    },
+    "/categories/{categoryId}": {
+      "schema": { "$ref": "#/entities/Category" },
+      "description": "Content taxonomy categories readable publicly and managed by admins."
+    },
+    "/courses/{courseId}": {
+      "schema": { "$ref": "#/entities/Course" },
+      "description": "Free IT courses; published tracks readable publicly, writes restricted to admins."
+    },
+    "/lessons/{lessonId}": {
+      "schema": { "$ref": "#/entities/Lesson" },
+      "description": "Lessons linked to courses; published lessons readable publicly, writes restricted to admins."
+    },
+    "/quizzes/{quizId}": {
+      "schema": { "$ref": "#/entities/Quiz" },
+      "description": "Quiz questions associated with lessons."
+    },
+    "/awareness_posts/{postId}": {
+      "schema": { "$ref": "#/entities/AwarenessPost" },
+      "description": "Weekly IT awareness briefings; published items readable publicly, writes restricted to admins."
+    },
+    "/knowledge_base/{guideId}": {
+      "schema": { "$ref": "#/entities/KnowledgeBaseGuide" },
+      "description": "Troubleshooting guides; published items readable publicly, writes restricted to admins."
+    },
+    "/digital_resources/{resourceId}": {
+      "schema": { "$ref": "#/entities/DigitalResource" },
+      "description": "Downloadable guides and checklists; published items readable publicly, writes restricted to admins."
+    },
+    "/media/{mediaId}": {
+      "schema": { "$ref": "#/entities/MediaAsset" },
+      "description": "Media library metadata and safe image URLs managed by admins."
+    },
+    "/website_settings/{settingId}": {
+      "schema": { "$ref": "#/entities/WebsiteSettings" },
+      "description": "Homepage editor, navigation menu, and SEO configuration readable publicly and updated by admins."
+    },
+    "/contact_inquiries/{inquiryId}": {
+      "schema": { "$ref": "#/entities/ContactInquiry" },
+      "description": "Public Contact Us submissions (public create with strict validation; admin-only read)."
+    }
+  }
+}

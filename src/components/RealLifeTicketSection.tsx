@@ -65,7 +65,7 @@ export default function RealLifeTicketSection({
   };
 
   return (
-    <section id="tickets" className="border-b border-slate-800/80 bg-[#0B1220] py-16 lg:py-20">
+    <section id="tickets" className="border-b border-slate-800/80 bg-[#0F1B2E] py-16 lg:py-20">
       <div className="mx-auto max-w-7xl px-6">
         {/* Section header + ticket selector */}
         <div className="flex flex-col justify-between gap-6 border-b border-slate-800 pb-6 lg:flex-row lg:items-end">
@@ -84,7 +84,7 @@ export default function RealLifeTicketSection({
           <div
             role="tablist"
             aria-label="Select support ticket"
-            className="flex flex-wrap items-center gap-1 rounded-lg border border-slate-700/70 bg-[#14243A]/70 p-1"
+            className="flex flex-wrap items-center gap-1 rounded-lg border border-slate-800 bg-[#0B1220] p-1"
           >
             {REAL_LIFE_TICKETS.map((item) => {
               const isActive = item.id === ticket.id;
@@ -104,7 +104,10 @@ export default function RealLifeTicketSection({
                 >
                   <span className="font-mono tabular-nums">{item.number}</span>
                   {isSolved && (
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" aria-label="Solved" />
+                    <CheckCircle2
+                      className={`h-3.5 w-3.5 ${isActive ? 'text-emerald-200' : 'text-emerald-400'}`}
+                      aria-label="Solved"
+                    />
                   )}
                 </button>
               );
@@ -119,19 +122,19 @@ export default function RealLifeTicketSection({
             <div className="glass-surface rounded-2xl p-6">
               <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-mono font-semibold text-[#06B6D4] tabular-nums">
+                  <span className="font-mono font-semibold text-cyan-300 tabular-nums">
                     {ticket.number}
                   </span>
                   <span aria-hidden="true">·</span>
                   <span className="text-[#CBD5E1]">{ticket.category}</span>
                   <span aria-hidden="true">·</span>
-                  <span className="text-[#F59E0B]">{ticket.difficulty}</span>
+                  <span className="font-medium text-[#F59E0B]">{ticket.difficulty}</span>
                   <span aria-hidden="true">·</span>
                   <span className="tabular-nums">{ticket.estimatedTime}</span>
                 </div>
                 {solvedTicketIds.includes(ticket.id) && (
-                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400">
-                    <CheckCircle2 className="h-3.5 w-3.5" />
+                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-300">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
                     Verified Solved
                   </span>
                 )}
@@ -146,14 +149,14 @@ export default function RealLifeTicketSection({
 
               <p className="mt-3 text-sm leading-relaxed text-[#CBD5E1]">{ticket.symptomSummary}</p>
 
-              <blockquote className="mt-4 rounded-xl border border-slate-700 bg-[#0B1220] p-4 text-sm italic text-[#CBD5E1]">
+              <blockquote className="mt-4 rounded-xl border border-slate-800 bg-[#0B1220] p-4 text-sm italic text-[#CBD5E1]">
                 “{ticket.userQuote}”
                 <footer className="mt-2 not-italic text-xs font-medium text-slate-400">
                   — {ticket.reporter}, {ticket.department} · Host {ticket.device} ({ticket.os})
                 </footer>
               </blockquote>
 
-              <p className="mt-3 font-mono text-xs text-[#06B6D4]">
+              <p className="mt-3 font-mono text-xs text-cyan-300">
                 Environment: {ticket.networkContext}
               </p>
             </div>
@@ -165,7 +168,7 @@ export default function RealLifeTicketSection({
                   <h4 className="font-display text-base font-semibold text-[#F8FAFC]">
                     Step 1: Run Diagnostic Checks
                   </h4>
-                  <p className="mt-0.5 text-xs text-[#CBD5E1] tabular-nums">
+                  <p className="mt-0.5 text-xs text-slate-400 tabular-nums">
                     {executedChecks.length} of {ticket.checks.length} checks executed
                   </p>
                 </div>
@@ -192,8 +195,8 @@ export default function RealLifeTicketSection({
                       onClick={() => handleRunCheck(check)}
                       className={`inline-flex min-h-[40px] items-center gap-2 rounded-lg border px-3.5 py-2 text-xs font-medium whitespace-nowrap shrink-0 transition-colors duration-150 cursor-pointer ${
                         alreadyRun
-                          ? 'border-cyan-500/60 bg-cyan-950/40 text-cyan-200'
-                          : 'border-slate-700 bg-[#0B1220] text-[#CBD5E1] hover:border-blue-500 hover:text-white'
+                          ? 'border-[#06B6D4]/60 bg-cyan-950/40 text-cyan-200'
+                          : 'border-slate-700 bg-[#0B1220] text-[#CBD5E1] hover:border-cyan-400 hover:bg-[#14243A] hover:text-white'
                       }`}
                     >
                       {alreadyRun ? (
@@ -208,10 +211,10 @@ export default function RealLifeTicketSection({
               </div>
 
               {/* Monospace Diagnostic Output Terminal */}
-              <div className="mt-5 overflow-hidden rounded-xl border border-slate-700 bg-[#070D18] text-slate-100">
+              <div className="mt-5 overflow-hidden rounded-xl border border-slate-800 bg-[#070D18] text-slate-100">
                 <div className="flex items-center justify-between border-b border-slate-800 px-4 py-2.5 text-xs text-slate-400">
                   <span className="inline-flex items-center gap-2 font-mono">
-                    <Terminal className="h-3.5 w-3.5 text-[#06B6D4]" />
+                    <Terminal className="h-3.5 w-3.5 text-cyan-400" />
                     Diagnostic Output Console
                   </span>
                   <span className="font-mono">{ticket.device}</span>
@@ -233,8 +236,8 @@ export default function RealLifeTicketSection({
                           {check.command}
                         </div>
                         <pre className="whitespace-pre-wrap text-slate-200">{check.output}</pre>
-                        <div className="rounded-lg border border-slate-800 bg-[#0F1B2E] px-3 py-2 text-[11px] text-[#CBD5E1]">
-                          <strong className="font-semibold text-[#F59E0B]">Observation:</strong>{' '}
+                        <div className="rounded-lg border border-slate-700 bg-slate-900/90 px-3 py-2 text-[11px] text-slate-200">
+                          <strong className="font-semibold text-amber-400">Observation:</strong>{' '}
                           {check.finding}
                         </div>
                       </div>
@@ -251,7 +254,7 @@ export default function RealLifeTicketSection({
               <h4 className="font-display text-base font-semibold text-[#F8FAFC]">
                 Step 2: Select Root Cause & Compare Solution
               </h4>
-              <p className="mt-1 text-xs text-[#CBD5E1]">
+              <p className="mt-1 text-xs text-slate-400">
                 Based on your diagnostic evidence, pick the true root cause before revealing the senior engineer solution.
               </p>
 
@@ -264,8 +267,8 @@ export default function RealLifeTicketSection({
                       key={hyp.id}
                       className={`block cursor-pointer rounded-xl border p-3.5 transition-colors duration-150 ${
                         isSelected
-                          ? 'border-cyan-400/80 bg-[#0B1220]'
-                          : 'border-slate-700/70 bg-[#0B1220]/70 hover:border-slate-500'
+                          ? 'border-[#06B6D4] bg-[#14243A]'
+                          : 'border-slate-800 bg-[#0B1220] hover:border-slate-700 hover:bg-[#14243A]/60'
                       }`}
                     >
                       <div className="flex items-start gap-3">
@@ -284,7 +287,7 @@ export default function RealLifeTicketSection({
                               [ticket.id]: false,
                             }));
                           }}
-                          className="mt-1 h-4 w-4 accent-[#06B6D4]"
+                          className="mt-1 h-4 w-4 accent-[#2563EB]"
                         />
                         <div>
                           <div className="text-sm font-semibold text-[#F8FAFC]">{hyp.title}</div>
@@ -301,7 +304,7 @@ export default function RealLifeTicketSection({
               <div className="mt-5">
                 <label
                   htmlFor={`notes-${ticket.id}`}
-                  className="block text-xs font-semibold text-[#CBD5E1]"
+                  className="block text-xs font-semibold text-[#F8FAFC]"
                 >
                   Your Troubleshooting Notes / Fix Plan (Optional)
                 </label>
@@ -314,7 +317,7 @@ export default function RealLifeTicketSection({
                     setNotesByTicket((prev) => ({ ...prev, [ticket.id]: e.target.value }))
                   }
                   placeholder="Write what command or change you would execute to fix this for the user..."
-                  className="mt-1.5 w-full rounded-lg border border-slate-700 bg-[#0B1220] px-3 py-2 text-sm text-[#F8FAFC] placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none"
+                  className="mt-1.5 w-full rounded-lg border border-slate-700 bg-[#0B1220] px-3 py-2 text-sm text-[#F8FAFC] placeholder:text-slate-500 focus:border-[#06B6D4] focus:outline-none"
                 />
               </div>
 
@@ -322,7 +325,7 @@ export default function RealLifeTicketSection({
                 type="button"
                 disabled={!selectedHypothesisId}
                 onClick={handleSubmitDiagnosis}
-                className="mt-4 flex min-h-[44px] w-full items-center justify-center rounded-lg bg-[#2563EB] px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400 cursor-pointer"
+                className="mt-4 flex min-h-[44px] w-full items-center justify-center rounded-lg bg-[#2563EB] px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-slate-800 disabled:text-slate-500 cursor-pointer"
               >
                 Submit Diagnosis & Compare Answer
               </button>
@@ -334,8 +337,8 @@ export default function RealLifeTicketSection({
                 <div
                   className={`flex items-start gap-3 rounded-xl border p-3.5 ${
                     selectedHypothesis.isCorrect
-                      ? 'border-emerald-500/50 bg-emerald-950/40 text-emerald-200'
-                      : 'border-amber-500/50 bg-amber-950/40 text-amber-200'
+                      ? 'border-emerald-500/40 bg-emerald-950/30 text-emerald-200'
+                      : 'border-amber-500/40 bg-amber-950/30 text-amber-200'
                   }`}
                 >
                   {selectedHypothesis.isCorrect ? (
@@ -352,7 +355,7 @@ export default function RealLifeTicketSection({
                 </div>
 
                 {userNotes.trim() && (
-                  <div className="mt-4 border-b border-slate-700/60 pb-4">
+                  <div className="mt-4 border-b border-slate-800 pb-4">
                     <h5 className="text-xs font-semibold text-slate-400">Your Proposed Notes</h5>
                     <p className="mt-1 text-sm text-[#F8FAFC]">{userNotes}</p>
                   </div>
@@ -364,7 +367,7 @@ export default function RealLifeTicketSection({
                       Suggested Senior Engineer Answer
                     </h5>
                     <p className="mt-1 text-xs leading-relaxed text-[#CBD5E1]">
-                      <strong className="text-[#06B6D4]">Root Cause: </strong>
+                      <strong className="text-cyan-300">Root Cause: </strong>
                       {ticket.suggestedSolution.rootCause}
                     </p>
                   </div>
@@ -384,7 +387,7 @@ export default function RealLifeTicketSection({
                       {ticket.suggestedSolution.commands.map((cmd) => (
                         <div
                           key={cmd}
-                          className="flex items-center justify-between gap-2 rounded-lg border border-slate-700 bg-[#070D18] px-3 py-2 font-mono text-xs text-cyan-200"
+                          className="flex items-center justify-between gap-2 rounded-lg border border-slate-800 bg-[#070D18] px-3 py-2 font-mono text-xs text-cyan-200"
                         >
                           <code className="truncate">{cmd}</code>
                           <button
@@ -405,7 +408,7 @@ export default function RealLifeTicketSection({
                     </div>
                   </div>
 
-                  <div className="border-t border-slate-700/60 pt-3 text-xs text-[#CBD5E1]">
+                  <div className="border-t border-slate-800 pt-3 text-xs text-[#CBD5E1]">
                     <strong className="text-[#F59E0B]">Prevention: </strong>
                     {ticket.suggestedSolution.prevention}
                   </div>

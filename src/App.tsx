@@ -10,7 +10,9 @@ import RoadmapSection from './components/RoadmapSection';
 import SolutionsAndResourcesSection from './components/SolutionsAndResourcesSection';
 import TopBar from './components/TopBar';
 import VirtualLabSection from './components/VirtualLabSection';
+import type { LabModuleId } from './components/lab/labTypes';
 import { CAREER_ROADMAP, FREE_COURSES, REAL_LIFE_TICKETS } from './data/itData';
+import { adminDataRepository, type PublicSiteContent } from './services/adminDataService';
 
 const STORAGE_TICKETS_KEY = 'three_angels_solved_tickets';
 const STORAGE_MILESTONES_KEY = 'three_angels_completed_milestones';
@@ -20,8 +22,11 @@ const VALID_TICKET_IDS = new Set(REAL_LIFE_TICKETS.map((t) => t.id));
 const VALID_MILESTONE_IDS = new Set(
   CAREER_ROADMAP.flatMap((stage) => stage.milestones.map((m) => m.id))
 );
-const VALID_COURSE_MODULE_IDS = new Set(
-  FREE_COURSES.flatMap((course) => course.modules.map((m) => m.id))
+const DEFAULT_COURSE_MODULE_IDS = new Set(
+  FREE_COURSES.flatMap((course) => [
+    ...course.modules.map((m) => m.id),
+    ...course.modules.map((m) => `lesson-${m.id}`),
+  ])
 );
 
 const SECTION_IDS = [
@@ -39,22 +44,44 @@ const SECTION_IDS = [
   'contact',
 ];
 
-function readValidatedIds(storageKey: string, allowedIds: Set<string>): string[] {
+function readValidatedIds(storageKey: string, allowedIds: Set<string> | null): string[] {
   try {
     const saved = localStorage.getItem(storageKey);
     if (!saved) return [];
     const parsed: unknown = JSON.parse(saved);
     if (!Array.isArray(parsed)) return [];
     return parsed.filter(
-      (item): item is string => typeof item === 'string' && allowedIds.has(item)
+      (item): item is string =>
+        typeof item === 'string' && (!allowedIds || allowedIds.has(item) || item.startsWith('lesson-'))
     );
   } catch {
     return [];
   }
 }
 
-export default function App() {
+interface AppProps {
+  onOpenAdmin?: () => void;
+  onOpenLab?: (moduleId?: LabModuleId) => void;
+}
+
+export default function App({ onOpenAdmin, onOpenLab }: AppProps) {
   const [activeSection, setActiveSection] = useState<string>('top');
+
+  const [siteContent, setSiteContent] = useState<PublicSiteContent>(() => {
+    const defaults = adminDataRepository.getInitialSnapshot();
+    return {
+      isHydrated: false,
+      isLiveFirestore: false,
+      articles: defaults.articles,
+      awareness_posts: defaults.awareness_posts,
+      courses: defaults.courses,
+      lessons: defaults.lessons,
+      knowledge_base: defaults.knowledge_base,
+      digital_resources: defaults.digital_resources,
+      media: defaults.media,
+      website_settings: defaults.website_settings,
+    };
+  });
 
   const [solvedTicketIds, setSolvedTicketIds] = useState<string[]>(() =>
     readValidatedIds(STORAGE_TICKETS_KEY, VALID_TICKET_IDS)
@@ -65,8 +92,38 @@ export default function App() {
   );
 
   const [completedCourseModules, setCompletedCourseModules] = useState<string[]>(() =>
-    readValidatedIds(STORAGE_COURSE_MODULES_KEY, VALID_COURSE_MODULE_IDS)
+    readValidatedIds(STORAGE_COURSE_MODULES_KEY, DEFAULT_COURSE_MODULE_IDS)
   );
+
+  const [quotaWarning, setQuotaWarning] = useState<string | null>(null);
+
+  // Real-time Firestore public content subscription (Spark Free Tier)
+  useEffect(() => {
+    const unsub = adminDataRepository.subscribePublicContent(
+      (next) => {
+        setSiteContent(next);
+        setQuotaWarning(null);
+      },
+      (errMsg) => {
+        if (errMsg.toLowerCase().includes('quota')) {
+          setQuotaWarning(errMsg);
+        }
+      }
+    );
+    return () => unsub();
+  }, []);
+
+  // Synchronize document SEO metadata dynamically from website_settings
+  useEffect(() => {
+    const seo = siteContent.website_settings.seo;
+    if (seo.pageTitle) {
+      document.title = seo.pageTitle;
+    }
+    const descEl = document.querySelector('meta[name="description"]');
+    if (descEl && seo.metaDescription) {
+      descEl.setAttribute('content', seo.metaDescription);
+    }
+  }, [siteContent.website_settings.seo]);
 
   useEffect(() => {
     try {
@@ -119,6 +176,10 @@ export default function App() {
   }, []);
 
   const handleNavigate = (sectionId: string) => {
+    if (sectionId === 'lab' && onOpenLab) {
+      onOpenLab('network');
+      return;
+    }
     setActiveSection(sectionId);
     if (sectionId === 'top') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -168,9 +229,26 @@ export default function App() {
     0
   );
 
+  const { website_settings } = siteContent;
+
   return (
     <div className="min-h-screen bg-[#0B1220] text-[#F8FAFC]">
-      <TopBar activeSection={activeSection} onNavigate={handleNavigate} />
+      <TopBar
+        activeSection={activeSection}
+        onNavigate={handleNavigate}
+        menuItems={website_settings.menuItems}
+        announcementEnabled={website_settings.homepage.announcementEnabled}
+        announcementText={website_settings.homepage.announcementText}
+      />
+
+      {quotaWarning && (
+        <div
+          role="status"
+          className="border-b border-amber-500/40 bg-amber-950/40 px-6 py-2.5 text-center text-xs font-medium text-amber-200"
+        >
+          {quotaWarning} Showing built-in local courses and browser Virtual IT Lab.
+        </div>
+      )}
 
       <main>
         <HeroSection
@@ -179,14 +257,25 @@ export default function App() {
           completedMilestonesCount={completedMilestones.length}
           totalMilestonesCount={totalMilestones}
           onNavigate={handleNavigate}
+          homepage={website_settings.homepage}
+          companyName={website_settings.companyName}
         />
 
-        <AwarenessSection />
+        <AwarenessSection
+          posts={siteContent.awareness_posts}
+          sectionHeading={website_settings.homepage.awarenessSectionHeading}
+          sectionSummary={website_settings.homepage.awarenessSectionSummary}
+        />
 
         <CoursesAndBlogSection
           completedCourseModules={completedCourseModules}
           onToggleCourseModule={handleToggleCourseModule}
           onNavigate={handleNavigate}
+          courses={siteContent.courses}
+          lessons={siteContent.lessons}
+          articles={siteContent.articles}
+          featuredCourseIds={website_settings.homepage.featuredCourseIds}
+          featuredArticleIds={website_settings.homepage.featuredArticleIds}
         />
 
         <RoadmapSection
@@ -195,21 +284,33 @@ export default function App() {
           onNavigate={handleNavigate}
         />
 
-        <SolutionsAndResourcesSection onNavigate={handleNavigate} />
+        <SolutionsAndResourcesSection
+          onNavigate={handleNavigate}
+          resources={siteContent.digital_resources}
+          solutionsHeading={website_settings.homepage.solutionsSectionHeading}
+          solutionsSummary={website_settings.homepage.solutionsSectionSummary}
+        />
 
-        <KnowledgeBaseSection />
+        <KnowledgeBaseSection guides={siteContent.knowledge_base} />
 
-        <VirtualLabSection />
+        <VirtualLabSection onOpenLab={onOpenLab} />
 
         <RealLifeTicketSection
           solvedTicketIds={solvedTicketIds}
           onMarkSolved={handleMarkTicketSolved}
         />
 
-        <AboutAndContactSection />
+        <AboutAndContactSection
+          companyName={website_settings.companyName}
+          supportNote={website_settings.supportNote}
+        />
       </main>
 
-      <Footer onNavigate={handleNavigate} onResetProgress={handleResetProgress} />
+      <Footer
+        onNavigate={handleNavigate}
+        onResetProgress={handleResetProgress}
+        onOpenAdmin={onOpenAdmin}
+      />
     </div>
   );
 }

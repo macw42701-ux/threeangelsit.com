@@ -1,0 +1,385 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Core identity & path validation primitives
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isBootstrappedOwner() {
+      return isSignedIn()
+        && request.auth.token.email_verified == true
+        && request.auth.token.email == 'solankimansukh36@gmail.com';
+    }
+
+    function isAdmin() {
+      return isBootstrappedOwner() || (
+        isSignedIn()
+        && request.auth.token.email_verified == true
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.status == 'Active'
+      );
+    }
+
+    function isValidStatus(status) {
+      return status == 'Published' || status == 'Draft';
+    }
+
+    // Entity Validation Helpers (Blueprint synchronized)
+    function isValidAdminUser(data) {
+      return data.keys().hasAll(['uid', 'displayName', 'email', 'role', 'status', 'createdAt'])
+        && data.keys().hasOnly(['uid', 'displayName', 'email', 'role', 'status', 'createdAt', 'lastSignInAt'])
+        && data.uid is string && data.uid.size() >= 1 && data.uid.size() <= 128
+        && data.displayName is string && data.displayName.size() >= 1 && data.displayName.size() <= 120
+        && data.email is string && data.email.size() >= 3 && data.email.size() <= 160
+        && data.role in ['Super Admin', 'Content Editor', 'Support Reviewer']
+        && data.status in ['Active', 'Pending Invite', 'Suspended']
+        && data.createdAt is timestamp;
+    }
+
+    function isValidPlatformUser(data) {
+      return data.keys().hasAll(['id', 'name', 'email', 'role', 'status', 'createdAt'])
+        && data.keys().hasOnly(['id', 'name', 'email', 'role', 'status', 'createdAt'])
+        && data.id is string && data.id.size() >= 1 && data.id.size() <= 128
+        && data.name is string && data.name.size() >= 1 && data.name.size() <= 120
+        && data.email is string && data.email.size() >= 3 && data.email.size() <= 160
+        && data.role in ['Super Admin', 'Editor', 'Instructor', 'Reader']
+        && data.status in ['Active', 'Invited', 'Disabled']
+        && data.createdAt is timestamp;
+    }
+
+    function isValidArticle(data) {
+      return data.keys().hasAll(['id', 'title', 'subtitle', 'content', 'featuredImage', 'author', 'category', 'tags', 'seoTitle', 'seoDescription', 'status', 'publishedDate', 'featured', 'updatedAt'])
+        && data.keys().hasOnly(['id', 'title', 'subtitle', 'content', 'featuredImage', 'author', 'category', 'tags', 'seoTitle', 'seoDescription', 'status', 'publishedDate', 'featured', 'updatedAt'])
+        && data.id is string && data.id.size() >= 1 && data.id.size() <= 128
+        && data.title is string && data.title.size() >= 3 && data.title.size() <= 200
+        && data.subtitle is string && data.subtitle.size() <= 400
+        && data.content is string && data.content.size() >= 10 && data.content.size() <= 50000
+        && data.featuredImage is string && data.featuredImage.size() <= 2000
+        && data.author is string && data.author.size() >= 1 && data.author.size() <= 120
+        && data.category is string && data.category.size() >= 1 && data.category.size() <= 80
+        && data.tags is list && data.tags.size() <= 15
+        && (data.tags.size() == 0 || data.tags[0] is string)
+        && data.seoTitle is string && data.seoTitle.size() <= 200
+        && data.seoDescription is string && data.seoDescription.size() <= 400
+        && isValidStatus(data.status)
+        && data.publishedDate is string && data.publishedDate.size() <= 40
+        && data.featured is bool
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidCategory(data) {
+      return data.keys().hasAll(['id', 'name', 'scope', 'slug'])
+        && data.keys().hasOnly(['id', 'name', 'scope', 'slug'])
+        && data.id is string && data.id.size() >= 1 && data.id.size() <= 128
+        && data.name is string && data.name.size() >= 1 && data.name.size() <= 100
+        && data.scope in ['blog', 'awareness', 'course', 'knowledge_base', 'resource', 'media']
+        && data.slug is string && data.slug.size() >= 1 && data.slug.size() <= 120;
+    }
+
+    function isValidCourse(data) {
+      return data.keys().hasAll(['id', 'title', 'description', 'thumbnailUrl', 'level', 'category', 'learningObjectives', 'lessonIds', 'materialIds', 'duration', 'status', 'updatedAt'])
+        && data.keys().hasOnly(['id', 'title', 'description', 'thumbnailUrl', 'level', 'category', 'learningObjectives', 'lessonIds', 'materialIds', 'duration', 'status', 'updatedAt'])
+        && data.id is string && data.id.size() >= 1 && data.id.size() <= 128
+        && data.title is string && data.title.size() >= 3 && data.title.size() <= 200
+        && data.description is string && data.description.size() >= 10 && data.description.size() <= 5000
+        && data.thumbnailUrl is string && data.thumbnailUrl.size() <= 2000
+        && data.level in ['Beginner', 'Intermediate', 'Advanced']
+        && data.category is string && data.category.size() >= 1 && data.category.size() <= 80
+        && data.learningObjectives is list && data.learningObjectives.size() <= 20
+        && (data.learningObjectives.size() == 0 || data.learningObjectives[0] is string)
+        && data.lessonIds is list && data.lessonIds.size() <= 50
+        && (data.lessonIds.size() == 0 || data.lessonIds[0] is string)
+        && data.materialIds is list && data.materialIds.size() <= 30
+        && (data.materialIds.size() == 0 || data.materialIds[0] is string)
+        && data.duration is string && data.duration.size() <= 80
+        && isValidStatus(data.status)
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidLesson(data) {
+      return data.keys().hasAll(['id', 'courseId', 'title', 'description', 'content', 'videoUrl', 'pdfResourceIds', 'practicalExercise', 'quizQuestions', 'sequence', 'status', 'updatedAt'])
+        && data.keys().hasOnly(['id', 'courseId', 'title', 'description', 'content', 'videoUrl', 'pdfResourceIds', 'practicalExercise', 'quizQuestions', 'sequence', 'status', 'updatedAt'])
+        && data.id is string && data.id.size() >= 1 && data.id.size() <= 128
+        && data.courseId is string && data.courseId.size() >= 1 && data.courseId.size() <= 128
+        && data.title is string && data.title.size() >= 2 && data.title.size() <= 200
+        && data.description is string && data.description.size() <= 1000
+        && data.content is string && data.content.size() <= 50000
+        && data.videoUrl is string && data.videoUrl.size() <= 2000
+        && data.pdfResourceIds is list && data.pdfResourceIds.size() <= 20
+        && (data.pdfResourceIds.size() == 0 || data.pdfResourceIds[0] is string)
+        && data.practicalExercise is string && data.practicalExercise.size() <= 5000
+        && data.quizQuestions is list && data.quizQuestions.size() <= 25
+        && data.sequence is number && data.sequence >= 1 && data.sequence <= 500
+        && isValidStatus(data.status)
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidQuiz(data) {
+      return data.keys().hasAll(['id', 'lessonId', 'questions'])
+        && data.keys().hasOnly(['id', 'lessonId', 'questions'])
+        && data.id is string && data.id.size() >= 1 && data.id.size() <= 128
+        && data.lessonId is string && data.lessonId.size() >= 1 && data.lessonId.size() <= 128
+        && data.questions is list && data.questions.size() <= 25;
+    }
+
+    function isValidAwarenessPost(data) {
+      return data.keys().hasAll(['id', 'weekLabel', 'title', 'category', 'summary', 'imageUrl', 'cybersecurityTips', 'digitalSafetyGuidance', 'weeklyContent', 'status', 'updatedAt'])
+        && data.keys().hasOnly(['id', 'weekLabel', 'title', 'category', 'summary', 'imageUrl', 'cybersecurityTips', 'digitalSafetyGuidance', 'weeklyContent', 'status', 'updatedAt'])
+        && data.id is string && data.id.size() >= 1 && data.id.size() <= 128
+        && data.weekLabel is string && data.weekLabel.size() >= 1 && data.weekLabel.size() <= 80
+        && data.title is string && data.title.size() >= 3 && data.title.size() <= 200
+        && data.category is string && data.category.size() >= 1 && data.category.size() <= 80
+        && data.summary is string && data.summary.size() >= 10 && data.summary.size() <= 2000
+        && data.imageUrl is string && data.imageUrl.size() <= 2000
+        && data.cybersecurityTips is list && data.cybersecurityTips.size() <= 20
+        && (data.cybersecurityTips.size() == 0 || data.cybersecurityTips[0] is string)
+        && data.digitalSafetyGuidance is list && data.digitalSafetyGuidance.size() <= 20
+        && (data.digitalSafetyGuidance.size() == 0 || data.digitalSafetyGuidance[0] is string)
+        && data.weeklyContent is string && data.weeklyContent.size() <= 20000
+        && isValidStatus(data.status)
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidKBGuide(data) {
+      return data.keys().hasAll(['id', 'title', 'category', 'difficulty', 'keywords', 'diagramUrl', 'steps', 'commands', 'status', 'updatedAt'])
+        && data.keys().hasOnly(['id', 'title', 'category', 'difficulty', 'keywords', 'diagramUrl', 'steps', 'commands', 'status', 'updatedAt'])
+        && data.id is string && data.id.size() >= 1 && data.id.size() <= 128
+        && data.title is string && data.title.size() >= 3 && data.title.size() <= 200
+        && data.category is string && data.category.size() >= 1 && data.category.size() <= 80
+        && data.difficulty in ['Beginner', 'Intermediate', 'Advanced']
+        && data.keywords is list && data.keywords.size() <= 20
+        && (data.keywords.size() == 0 || data.keywords[0] is string)
+        && data.diagramUrl is string && data.diagramUrl.size() <= 2000
+        && data.steps is list && data.steps.size() >= 1 && data.steps.size() <= 40
+        && (data.steps.size() == 0 || data.steps[0] is string)
+        && data.commands is list && data.commands.size() <= 30
+        && (data.commands.size() == 0 || data.commands[0] is string)
+        && isValidStatus(data.status)
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidDigitalResource(data) {
+      return data.keys().hasAll(['id', 'title', 'fileName', 'fileType', 'fileSizeBytes', 'category', 'uploadDate', 'status', 'description'])
+        && data.keys().hasOnly(['id', 'title', 'fileName', 'fileType', 'fileSizeBytes', 'category', 'uploadDate', 'status', 'description', 'content', 'downloadUrl'])
+        && data.id is string && data.id.size() >= 1 && data.id.size() <= 128
+        && data.title is string && data.title.size() >= 3 && data.title.size() <= 200
+        && data.fileName is string && data.fileName.size() >= 1 && data.fileName.size() <= 200
+        && data.fileType is string && data.fileType.size() >= 1 && data.fileType.size() <= 120
+        && data.fileSizeBytes is number && data.fileSizeBytes >= 0 && data.fileSizeBytes <= 20000000
+        && data.category is string && data.category.size() >= 1 && data.category.size() <= 80
+        && data.uploadDate is string && data.uploadDate.size() <= 40
+        && isValidStatus(data.status)
+        && data.description is string && data.description.size() <= 1000
+        && (!('content' in data) || (data.content is string && data.content.size() <= 100000))
+        && (!('downloadUrl' in data) || (data.downloadUrl is string && data.downloadUrl.size() <= 2000));
+    }
+
+    function isValidMediaAsset(data) {
+      return data.keys().hasAll(['id', 'title', 'description', 'altText', 'category', 'fileName', 'mimeType', 'sizeBytes', 'url', 'uploadedAt'])
+        && data.keys().hasOnly(['id', 'title', 'description', 'altText', 'category', 'fileName', 'mimeType', 'sizeBytes', 'url', 'uploadedAt'])
+        && data.id is string && data.id.size() >= 1 && data.id.size() <= 128
+        && data.title is string && data.title.size() >= 1 && data.title.size() <= 200
+        && data.description is string && data.description.size() <= 1000
+        && data.altText is string && data.altText.size() <= 300
+        && data.category is string && data.category.size() >= 1 && data.category.size() <= 80
+        && data.fileName is string && data.fileName.size() >= 1 && data.fileName.size() <= 200
+        && data.mimeType in ['image/jpeg', 'image/png', 'image/webp']
+        && data.sizeBytes is number && data.sizeBytes >= 0 && data.sizeBytes <= 10000000
+        && data.url is string && data.url.size() >= 1 && data.url.size() <= 200000
+        && data.uploadedAt is string && data.uploadedAt.size() <= 40;
+    }
+
+    function isValidWebsiteSettings(data) {
+      return data.keys().hasAll(['companyName', 'tagline', 'supportNote', 'openAccessEnabled', 'homepage', 'menuItems', 'seo', 'updatedAt'])
+        && data.keys().hasOnly(['companyName', 'tagline', 'supportNote', 'openAccessEnabled', 'homepage', 'menuItems', 'seo', 'updatedAt'])
+        && data.companyName is string && data.companyName.size() >= 1 && data.companyName.size() <= 160
+        && data.tagline is string && data.tagline.size() <= 300
+        && data.supportNote is string && data.supportNote.size() <= 1000
+        && data.openAccessEnabled is bool
+        && data.homepage is map
+        && data.menuItems is list && data.menuItems.size() <= 30
+        && data.seo is map
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidContactInquiry(data) {
+      return data.keys().hasAll(['name', 'email', 'topic', 'message', 'status', 'createdAt'])
+        && data.keys().hasOnly(['name', 'email', 'topic', 'message', 'status', 'createdAt'])
+        && data.name is string && data.name.size() >= 2 && data.name.size() <= 80
+        && data.email is string && data.email.size() >= 5 && data.email.size() <= 120
+        && data.topic is string && data.topic.size() >= 2 && data.topic.size() <= 80
+        && data.message is string && data.message.size() >= 10 && data.message.size() <= 1000
+        && data.status in ['New', 'Reviewed']
+        && data.createdAt is timestamp;
+    }
+
+    // 1. Admins Allowlist Collection (Strictly protected)
+    match /admins/{adminId} {
+      allow get: if isValidId(adminId) && isSignedIn() && request.auth.token.email_verified == true && (request.auth.uid == adminId || isAdmin());
+      allow list: if isBootstrappedOwner();
+      allow create: if isValidId(adminId) && isBootstrappedOwner() && isValidAdminUser(incoming()) && incoming().createdAt == request.time;
+      allow update: if isValidId(adminId) && isBootstrappedOwner() && isValidAdminUser(incoming())
+        && incoming().createdAt == existing().createdAt
+        && incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'role', 'status', 'lastSignInAt']);
+      allow delete: if isValidId(adminId) && isBootstrappedOwner();
+    }
+
+    // 2. Managed Users Collection (Owner or Admin only; self-elevation blocked)
+    match /users/{userId} {
+      allow get: if isValidId(userId) && isSignedIn() && request.auth.token.email_verified == true && (request.auth.uid == userId || isAdmin());
+      allow list: if isBootstrappedOwner();
+      allow create: if isValidId(userId) && isAdmin() && isValidPlatformUser(incoming()) && incoming().createdAt == request.time;
+      allow update: if isValidId(userId) && isAdmin() && isValidPlatformUser(incoming())
+        && incoming().createdAt == existing().createdAt
+        && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'role', 'status']);
+      allow delete: if isValidId(userId) && isAdmin();
+    }
+
+    // 3. Articles Collection (Public read on Published; Admin read/write all)
+    match /articles/{articleId} {
+      allow get: if isValidId(articleId) && (resource.data.status == 'Published' || isAdmin());
+      allow list: if resource.data.status == 'Published' || isBootstrappedOwner();
+      allow create: if isValidId(articleId) && isAdmin() && isValidArticle(incoming()) && incoming().updatedAt == request.time;
+      allow update: if isValidId(articleId) && isAdmin() && isValidArticle(incoming())
+        && incoming().updatedAt == request.time
+        && incoming().id == existing().id
+        && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'subtitle', 'content', 'featuredImage', 'author', 'category', 'tags', 'seoTitle', 'seoDescription', 'status', 'publishedDate', 'featured', 'updatedAt']);
+      allow delete: if isValidId(articleId) && isAdmin();
+    }
+
+    // 4. Categories Collection (Public read, Admin write)
+    match /categories/{categoryId} {
+      allow get: if isValidId(categoryId);
+      allow list: if true;
+      allow create: if isValidId(categoryId) && isAdmin() && isValidCategory(incoming());
+      allow update: if isValidId(categoryId) && isAdmin() && isValidCategory(incoming())
+        && incoming().id == existing().id
+        && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'scope', 'slug']);
+      allow delete: if isValidId(categoryId) && isAdmin();
+    }
+
+    // 5. Courses Collection (Public read on Published; Admin read/write all)
+    match /courses/{courseId} {
+      allow get: if isValidId(courseId) && (resource.data.status == 'Published' || isAdmin());
+      allow list: if resource.data.status == 'Published' || isBootstrappedOwner();
+      allow create: if isValidId(courseId) && isAdmin() && isValidCourse(incoming()) && incoming().updatedAt == request.time;
+      allow update: if isValidId(courseId) && isAdmin() && isValidCourse(incoming())
+        && incoming().updatedAt == request.time
+        && incoming().id == existing().id
+        && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'description', 'thumbnailUrl', 'level', 'category', 'learningObjectives', 'lessonIds', 'materialIds', 'duration', 'status', 'updatedAt']);
+      allow delete: if isValidId(courseId) && isAdmin();
+    }
+
+    // 6. Lessons Collection (Public read on Published; Admin read/write all)
+    match /lessons/{lessonId} {
+      allow get: if isValidId(lessonId) && (resource.data.status == 'Published' || isAdmin());
+      allow list: if resource.data.status == 'Published' || isBootstrappedOwner();
+      allow create: if isValidId(lessonId) && isAdmin() && isValidLesson(incoming()) && incoming().updatedAt == request.time;
+      allow update: if isValidId(lessonId) && isAdmin() && isValidLesson(incoming())
+        && incoming().updatedAt == request.time
+        && incoming().id == existing().id
+        && incoming().diff(existing()).affectedKeys().hasOnly(['courseId', 'title', 'description', 'content', 'videoUrl', 'pdfResourceIds', 'practicalExercise', 'quizQuestions', 'sequence', 'status', 'updatedAt']);
+      allow delete: if isValidId(lessonId) && isAdmin();
+    }
+
+    // 7. Quizzes Collection
+    match /quizzes/{quizId} {
+      allow get: if isValidId(quizId);
+      allow list: if true;
+      allow create: if isValidId(quizId) && isAdmin() && isValidQuiz(incoming());
+      allow update: if isValidId(quizId) && isAdmin() && isValidQuiz(incoming())
+        && incoming().id == existing().id
+        && incoming().diff(existing()).affectedKeys().hasOnly(['lessonId', 'questions']);
+      allow delete: if isValidId(quizId) && isAdmin();
+    }
+
+    // 8. Awareness Posts Collection
+    match /awareness_posts/{postId} {
+      allow get: if isValidId(postId) && (resource.data.status == 'Published' || isAdmin());
+      allow list: if resource.data.status == 'Published' || isBootstrappedOwner();
+      allow create: if isValidId(postId) && isAdmin() && isValidAwarenessPost(incoming()) && incoming().updatedAt == request.time;
+      allow update: if isValidId(postId) && isAdmin() && isValidAwarenessPost(incoming())
+        && incoming().updatedAt == request.time
+        && incoming().id == existing().id
+        && incoming().diff(existing()).affectedKeys().hasOnly(['weekLabel', 'title', 'category', 'summary', 'imageUrl', 'cybersecurityTips', 'digitalSafetyGuidance', 'weeklyContent', 'status', 'updatedAt']);
+      allow delete: if isValidId(postId) && isAdmin();
+    }
+
+    // 9. Knowledge Base Collection
+    match /knowledge_base/{guideId} {
+      allow get: if isValidId(guideId) && (resource.data.status == 'Published' || isAdmin());
+      allow list: if resource.data.status == 'Published' || isBootstrappedOwner();
+      allow create: if isValidId(guideId) && isAdmin() && isValidKBGuide(incoming()) && incoming().updatedAt == request.time;
+      allow update: if isValidId(guideId) && isAdmin() && isValidKBGuide(incoming())
+        && incoming().updatedAt == request.time
+        && incoming().id == existing().id
+        && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'category', 'difficulty', 'keywords', 'diagramUrl', 'steps', 'commands', 'status', 'updatedAt']);
+      allow delete: if isValidId(guideId) && isAdmin();
+    }
+
+    // 10. Digital Resources Collection
+    match /digital_resources/{resourceId} {
+      allow get: if isValidId(resourceId) && (resource.data.status == 'Published' || isAdmin());
+      allow list: if resource.data.status == 'Published' || isBootstrappedOwner();
+      allow create: if isValidId(resourceId) && isAdmin() && isValidDigitalResource(incoming());
+      allow update: if isValidId(resourceId) && isAdmin() && isValidDigitalResource(incoming())
+        && incoming().id == existing().id
+        && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'fileName', 'fileType', 'fileSizeBytes', 'category', 'uploadDate', 'status', 'description', 'content', 'downloadUrl']);
+      allow delete: if isValidId(resourceId) && isAdmin();
+    }
+
+    // 11. Media Library Collection
+    match /media/{mediaId} {
+      allow get: if isValidId(mediaId);
+      allow list: if true;
+      allow create: if isValidId(mediaId) && isAdmin() && isValidMediaAsset(incoming());
+      allow update: if isValidId(mediaId) && isAdmin() && isValidMediaAsset(incoming())
+        && incoming().id == existing().id
+        && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'description', 'altText', 'category', 'fileName', 'mimeType', 'sizeBytes', 'url', 'uploadedAt']);
+      allow delete: if isValidId(mediaId) && isAdmin();
+    }
+
+    // 12. Website Settings Collection (Public homepage, menu & SEO configuration)
+    match /website_settings/{settingId} {
+      allow get: if isValidId(settingId);
+      allow list: if true;
+      allow create: if isValidId(settingId) && isAdmin() && isValidWebsiteSettings(incoming()) && incoming().updatedAt == request.time;
+      allow update: if isValidId(settingId) && isAdmin() && isValidWebsiteSettings(incoming())
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly(['companyName', 'tagline', 'supportNote', 'openAccessEnabled', 'homepage', 'menuItems', 'seo', 'updatedAt']);
+      allow delete: if isValidId(settingId) && isAdmin();
+    }
+
+    // 13. Contact Inquiries Collection (Public create validated; Admin-only read/update)
+    match /contact_inquiries/{inquiryId} {
+      allow get: if isValidId(inquiryId) && isAdmin();
+      allow list: if isBootstrappedOwner();
+      allow create: if isValidId(inquiryId) && isValidContactInquiry(incoming())
+        && incoming().status == 'New'
+        && incoming().createdAt == request.time;
+      allow update: if isValidId(inquiryId) && isAdmin() && isValidContactInquiry(incoming())
+        && incoming().createdAt == existing().createdAt
+        && incoming().diff(existing()).affectedKeys().hasOnly(['status']);
+      allow delete: if isValidId(inquiryId) && isAdmin();
+    }
+  }
+}

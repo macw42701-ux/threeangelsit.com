@@ -5,20 +5,21 @@ import BrandLogo from './BrandLogo';
 interface FooterProps {
   onNavigate: (sectionId: string) => void;
   onResetProgress: () => void;
+  onOpenAdmin?: () => void;
 }
 
-export default function Footer({ onNavigate, onResetProgress }: FooterProps) {
+export default function Footer({ onNavigate, onResetProgress, onOpenAdmin }: FooterProps) {
   const [legalModal, setLegalModal] = useState<'privacy' | 'terms' | null>(null);
 
   return (
     <>
-      <footer className="bg-[#070D18] text-[#CBD5E1]">
+      <footer className="border-t border-slate-800 bg-[#070D18] text-[#CBD5E1]">
         <div className="mx-auto max-w-7xl px-6 py-14">
           <div className="grid grid-cols-1 gap-10 border-b border-slate-800 pb-10 sm:grid-cols-2 lg:grid-cols-12">
             {/* Brand & Description */}
             <div className="lg:col-span-4">
               <BrandLogo variant="stacked" />
-              <p className="mt-3 max-w-sm text-xs leading-relaxed text-[#CBD5E1]">
+              <p className="mt-3 max-w-sm text-xs leading-relaxed text-slate-400">
                 Practical IT knowledge, digital safety awareness, beginner-friendly courses, browser-based virtual labs, and diagnostic runbooks—freely accessible without individual logins.
               </p>
             </div>
@@ -40,7 +41,7 @@ export default function Footer({ onNavigate, onResetProgress }: FooterProps) {
                     <button
                       type="button"
                       onClick={() => onNavigate(item.id)}
-                      className="text-[#CBD5E1] hover:text-white cursor-pointer"
+                      className="text-slate-400 hover:text-cyan-300 cursor-pointer"
                     >
                       {item.label}
                     </button>
@@ -65,7 +66,7 @@ export default function Footer({ onNavigate, onResetProgress }: FooterProps) {
                     <button
                       type="button"
                       onClick={() => onNavigate(item.id)}
-                      className="text-[#CBD5E1] hover:text-white cursor-pointer"
+                      className="text-slate-400 hover:text-cyan-300 cursor-pointer"
                     >
                       {item.label}
                     </button>
@@ -89,7 +90,7 @@ export default function Footer({ onNavigate, onResetProgress }: FooterProps) {
                     <button
                       type="button"
                       onClick={() => onNavigate(item.id)}
-                      className="text-[#CBD5E1] hover:text-white cursor-pointer"
+                      className="text-slate-400 hover:text-cyan-300 cursor-pointer"
                     >
                       {item.label}
                     </button>
@@ -99,7 +100,7 @@ export default function Footer({ onNavigate, onResetProgress }: FooterProps) {
                   <button
                     type="button"
                     onClick={onResetProgress}
-                    className="text-[#F59E0B] underline underline-offset-4 hover:text-amber-300 cursor-pointer"
+                    className="font-semibold text-[#F59E0B] underline underline-offset-4 hover:text-amber-300 cursor-pointer"
                   >
                     Reset Saved Progress
                   </button>
@@ -133,6 +134,15 @@ export default function Footer({ onNavigate, onResetProgress }: FooterProps) {
               >
                 Contact Support
               </button>
+              {onOpenAdmin && (
+                <button
+                  type="button"
+                  onClick={onOpenAdmin}
+                  className="font-semibold text-cyan-400 hover:text-cyan-300 cursor-pointer"
+                >
+                  Admin Portal
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -144,9 +154,9 @@ export default function Footer({ onNavigate, onResetProgress }: FooterProps) {
           role="dialog"
           aria-modal="true"
           aria-labelledby="legal-modal-title"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#070D18]/80 p-4 backdrop-blur-sm"
         >
-          <div className="w-full max-w-lg rounded-2xl border border-slate-700 bg-[#0F1B2E] p-6 shadow-2xl">
+          <div className="w-full max-w-lg rounded-2xl border border-slate-800 bg-[#0F1B2E] p-6 shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h3 id="legal-modal-title" className="font-display text-lg font-bold text-[#F8FAFC]">
                 {legalModal === 'privacy' ? 'Privacy Policy' : 'Terms and Conditions'}
@@ -155,7 +165,7 @@ export default function Footer({ onNavigate, onResetProgress }: FooterProps) {
                 type="button"
                 aria-label="Close legal dialog"
                 onClick={() => setLegalModal(null)}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-700 bg-[#14243A] text-[#CBD5E1] hover:text-white cursor-pointer"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-700 bg-[#0B1220] text-[#CBD5E1] hover:border-cyan-400 hover:text-white cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>

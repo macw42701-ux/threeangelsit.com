@@ -35,9 +35,9 @@ export default function RoadmapSection({
               A structured six-stage progression from computer hardware and operating systems to helpdesk operations, networking, cloud infrastructure, and cybersecurity.
             </p>
           </div>
-          <div className="text-xs font-medium text-[#CBD5E1] tabular-nums shrink-0">
+          <div className="text-xs font-medium text-slate-400 tabular-nums shrink-0">
             Overall Progress:{' '}
-            <strong className="font-semibold text-[#06B6D4]">
+            <strong className="font-semibold text-cyan-300">
               {completedMilestones.length} / {totalMilestones} milestones
             </strong>
           </div>
@@ -58,22 +58,22 @@ export default function RoadmapSection({
                   onClick={() => setSelectedStageId(stage.id)}
                   className={`flex w-full items-center justify-between gap-4 rounded-xl border px-4 py-3.5 text-left transition-all duration-150 cursor-pointer ${
                     isSelected
-                      ? 'border-cyan-400/70 bg-[#14243A] shadow-md shadow-cyan-950/30'
-                      : 'border-slate-800 bg-[#0F1B2E] hover:border-slate-600 hover:bg-[#14243A]/70'
+                      ? 'border-[#06B6D4] bg-[#14243A] shadow-lg'
+                      : 'border-slate-800 bg-[#0F1B2E] hover:border-slate-700 hover:bg-[#14243A]/60'
                   }`}
                 >
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 text-xs text-slate-400">
-                      <span className="font-mono font-semibold text-[#06B6D4] tabular-nums">
+                      <span className="font-mono font-semibold text-cyan-300 tabular-nums">
                         Stage {stage.stepNumber}
                       </span>
                       <span aria-hidden="true">·</span>
-                      <span className="text-[#CBD5E1]">{stage.timeline}</span>
+                      <span>{stage.timeline}</span>
                     </div>
                     <div className="mt-0.5 font-display text-base font-semibold text-[#F8FAFC] truncate">
                       {stage.title}
                     </div>
-                    <div className="text-xs text-[#CBD5E1] truncate">{stage.focus}</div>
+                    <div className="text-xs text-slate-400 truncate">{stage.focus}</div>
                   </div>
                   <div className="shrink-0 font-mono text-xs font-semibold text-[#F59E0B] tabular-nums">
                     {stageDoneCount}/{stage.milestones.length}
@@ -87,13 +87,13 @@ export default function RoadmapSection({
           <div className="lg:col-span-7">
             <div className="glass-surface rounded-2xl p-6 sm:p-8">
               <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400">
-                <span className="font-mono font-semibold text-[#06B6D4] tabular-nums">
+                <span className="font-mono font-semibold text-cyan-300 tabular-nums">
                   Stage {activeStage.stepNumber}
                 </span>
                 <span aria-hidden="true">·</span>
-                <span className="text-[#CBD5E1]">{activeStage.timeline}</span>
+                <span>{activeStage.timeline}</span>
                 <span aria-hidden="true">·</span>
-                <span className="text-[#F59E0B]">{activeStage.focus}</span>
+                <span className="font-medium text-[#F59E0B]">{activeStage.focus}</span>
               </div>
 
               <h3 className="mt-2 font-display text-2xl font-bold text-[#F8FAFC]">
@@ -105,7 +105,7 @@ export default function RoadmapSection({
               </p>
 
               {/* Core Skills */}
-              <div className="mt-6 border-t border-slate-700/60 pt-5">
+              <div className="mt-6 border-t border-slate-800 pt-5">
                 <h4 className="font-display text-sm font-semibold text-[#F8FAFC]">
                   Core Competencies to Master
                 </h4>
@@ -120,7 +120,7 @@ export default function RoadmapSection({
               </div>
 
               {/* Interactive Milestones */}
-              <div className="mt-6 border-t border-slate-700/60 pt-5">
+              <div className="mt-6 border-t border-slate-800 pt-5">
                 <h4 className="font-display text-sm font-semibold text-[#F8FAFC]">
                   Practical Milestones (Saved Locally)
                 </h4>
@@ -134,8 +134,8 @@ export default function RoadmapSection({
                         onClick={() => onToggleMilestone(m.id)}
                         className={`flex w-full items-start gap-3 rounded-xl border px-4 py-3 text-left text-sm transition-colors cursor-pointer ${
                           checked
-                            ? 'border-emerald-500/50 bg-emerald-950/35 text-emerald-100'
-                            : 'border-slate-700 bg-[#0B1220] text-[#F8FAFC] hover:border-cyan-500/50'
+                            ? 'border-emerald-500/40 bg-emerald-950/30 text-emerald-200'
+                            : 'border-slate-800 bg-[#0B1220] text-[#F8FAFC] hover:border-cyan-400/70 hover:bg-[#14243A]'
                         }`}
                       >
                         {checked ? (
@@ -153,8 +153,8 @@ export default function RoadmapSection({
               </div>
 
               {/* Tools & Direct Practice CTA */}
-              <div className="mt-6 flex flex-col justify-between gap-4 border-t border-slate-700/60 pt-5 sm:flex-row sm:items-center">
-                <div className="text-xs text-[#CBD5E1]">
+              <div className="mt-6 flex flex-col justify-between gap-4 border-t border-slate-800 pt-5 sm:flex-row sm:items-center">
+                <div className="text-xs text-slate-400">
                   <span className="font-semibold text-[#F8FAFC]">Key Tools: </span>
                   <span className="font-mono text-cyan-300">
                     {activeStage.essentialTools.join(' · ')}
